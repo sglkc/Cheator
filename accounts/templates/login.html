@@ -1,0 +1,106 @@
+<!-- templates/login.html -->
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script
+      src="https://kit.fontawesome.com/64d58efce2.js"
+      crossorigin="anonymous"
+    ></script>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/loginn.css' %}" />
+    <title>Log In</title>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  </head>
+  <body>
+    <div class="container">
+      <div class="forms-container">
+        <div class="signin-signup">
+          <!-- Sign In Form -->
+          <form method="POST" class="sign-in-form" id="student-form">
+            {% csrf_token %}
+            <h2 class="title">Sign in</h2>
+            <div class="input-field">
+              <i class="fas fa-user"></i>
+              <input type="text" name="nim" placeholder="NIM" required />
+            </div>
+            <div class="input-field">
+              <i class="fas fa-lock"></i>
+              <input type="password" name="password" placeholder="Password" required />
+            </div>
+            <div>
+              <button class="btn-2" type="submit" value="login">Login</button>
+            </div>
+          </form>
+          <!-- Sign Up Form -->
+          <form method="POST" class="sign-up-form" id="teacher-form">
+            {% csrf_token %}
+            <h2 class="title">Sign in</h2>
+            <div class="input-field">
+              <i class="fas fa-user"></i>
+              <input type="text" name="nip" placeholder="NIP" required />
+            </div>
+            <div class="input-field">
+              <i class="fas fa-lock"></i>
+              <input type="password" name="password" placeholder="Password" required />
+            </div>
+            <div>
+              <button class="btn-2" type="submit" value="login">Login</button>
+            </div>
+          </form>
+        </div>
+      </div>
+      <!-- Panel structure -->
+      <div class="panels-container">
+        <!-- Sign In Panel -->
+        <div class="panel left-panel">
+          <div class="content">
+            <h3>Portal Mahasiswa</h3>
+            <p>Pengajar login di halaman sebelah</p>
+            <button class="btn transparent" id="sign-up-btn">Pengajar</button>
+          </div>
+          <img src="{% static 'asset/img/login.svg' %}" class="image" alt="Log Image" />
+        </div>
+        <!-- Sign Up Panel -->
+        <div class="panel right-panel">
+          <div class="content">
+            <h3>Login Pengajar</h3>
+            <p>Kamu mahasiswa? jangan Login disini</p>
+            <button class="btn transparent" id="sign-in-btn">Mahasiswa</button>
+          </div>
+          <img src="{% static 'asset/img/pengawas.svg' %}" class="image" alt="Register Image" />
+        </div>
+      </div>
+    </div>
+    <script src="{% static 'js/app.js' %}"></script>
+    <!-- SweetAlert for messages -->
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+          {% if messages %}
+              {% for message in messages %}
+                  let type = '{{ message.tags }}';
+                  let title = 'Informasi';
+                  let icon = 'info';
+
+                  if (type === 'error') {
+                      icon = 'error';
+                      title = 'Hayolo';
+                  } else if (type === 'success') {
+                      icon = 'success';
+                      title = "Berhasil"
+                  }
+
+                  Swal.fire({
+                      icon: icon,
+                      title: title,
+                      text: '{{ message }}',
+                      timer: 5000,
+                      showConfirmButton: false
+                  });
+              {% endfor %}
+          {% endif %}
+      });
+  </script>
+  </body>
+</html>

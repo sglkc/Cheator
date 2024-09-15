@@ -1,0 +1,42 @@
+<!-- dashboard.html -->
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dashboard Dosen</title>
+</head>
+<body>
+    <h1>
+        {% if user.gender == 'P' %}
+            Selamat datang Pak {{ user.nama }}
+        {% elif user.gender == 'W' %}
+            Selamat datang Bu {{ user.nama }}
+        {% else %}
+            Selamat datang {{ user.nama }}
+        {% endif %}
+    </h1>
+    <h2>Daftar Mahasiswa di Kelas {{ user.kelas }}</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>NIM</th>
+                <th>Nama</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for mhs in mahasiswa %}
+            <tr>
+                <td>{{ mhs.nim }}</td>
+                <td>{{ mhs.nama }}</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="2">Tidak ada mahasiswa di kelas ini.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <a href="{% url 'logout' %}">Logout</a>
+</body>
+</html>

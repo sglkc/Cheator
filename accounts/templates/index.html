@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cheator</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/landing.css' %}" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+</head>
+
+<body>
+    <header>
+        <a href='#' class="logo">Cheator <span>.</span></a>
+        <nav class="navbar">
+            <a href="#home">Home</a>
+            <a href="#about">Overview</a>
+            <a href="#openModal" id="openModalLink">Try!</a>
+            <a href="#contact">Team</a>
+        </nav>
+    </header>
+
+    <section class="home" id="home">
+        <div class="abstract-shape"></div>
+        <div class="content">
+            <h3>Cheat Detector</h3>
+            <span>Ensuring Fairness</span>
+            <p>
+                Cheator adalah sebuah aplikasi yang dirancang untuk mendeteksi aktivitas curang atau tidak wajar selama
+                ujian atau situasi pengawasan lainnya. Aplikasi ini menggunakan teknologi pemrosesan video dan deteksi
+                pose tubuh untuk memantau gerakan dan postur tubuh peserta ujian secara real-time.
+            </p>
+            <div>
+                <a style="--clr: #000" class="btn-3" href="#about">
+                    <span class="button__icon-wrapper">
+                        <svg width="10" class="button__icon-svg" xmlns="http://www.w3.org/2000/svg" fill="none"
+                            viewBox="0 0 14 15">
+                            <path fill="currentColor"
+                                d="M13.376 11.552l-.264-10.44-10.44-.24.024 2.28 6.96-.048L.2 12.56l1.488 1.488 9.432-9.432-.048 6.912 2.304.024z">
+                            </path>
+                        </svg>
+
+                        <svg class="button__icon-svg button__icon-svg--copy" xmlns="http://www.w3.org/2000/svg"
+                            width="10" fill="none" viewBox="0 0 14 15">
+                            <path fill="currentColor"
+                                d="M13.376 11.552l-.264-10.44-10.44-.24.024 2.28 6.96-.048L.2 12.56l1.488 1.488 9.432-9.432-.048 6.912 2.304.024z">
+                            </path>
+                        </svg>
+                    </span>
+                    Explore
+                </a>
+            </div>
+        </div>
+        <div class="image">
+            <img src="{% static 'asset/img/desc.svg' %}" alt="index image" />
+        </div>
+    </section>
+
+    <!-- Modal Structure -->
+    <div id="myModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn">&times;</span>
+            <h2 class="modal-title">Want to try?</h2>
+            <p class="modal-description">Choose what you want to try!</p>
+            <div class="modal-body">
+                <img src="{% static 'asset/img/modal.svg' %}" alt="modalimg" class="modal-img" />
+                <div class="modal-buttons">
+                    <a href="{% url 'login' %}" class="btn" id="onlineBtn">Online</a>
+                    <button class="btn" id="offlineBtn">Offline</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <section class="about" id="about">
+        <h1 class="heading" data-aos="fade-up" data-aos-duration="1000"> <span> Over</span>view </h1>
+        <div class="row">
+            <div class="video-container" data-aos="fade-right" data-aos-duration="1000">
+                <video src="{% static 'asset/vid/demo.mp4' %}" loop autoplay muted></video>
+            </div>
+            <div class="content" data-aos="fade-left" data-aos-duration="1000">
+                <h3>Virtual Proctoring</h3>
+                <p>Memanfaatkan MediaPipe untuk analisis video langsung selama ujian daring. MediaPipe menggunakan
+                    kecerdasan buatan untuk memantau dan menganalisis gerakan peserta ujian, mendeteksi perilaku
+                    mencurigakan dengan akurasi tinggi.</p>
+                <div class="text-img">
+                    <img src="{% static 'asset/img/online.svg' %}" data-aos="zoom-in-up" data-aos-duration="1000"
+                        alt="Online">
+                    <p>Dengan fitur ini, pengawasan dapat dilakukan secara efektif selama ujian berlangsung, mengurangi
+                        kemungkinan kecurangan yang tidak terdeteksi.</p>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="content" data-aos="fade-right" data-aos-duration="1000">
+                <h3 class="offl">Centralized Monitoring</h3>
+                <p>Memanfaatkan YOLO untuk menganalisis rekaman video dari seluruh siswa. YOLO adalah model deteksi
+                    objek yang cepat dan akurat, yang mampu mengidentifikasi dan melacak aktivitas peserta ujian dengan
+                    detail yang tinggi.</p>
+                <div class="text-img">
+                    <img src="{% static 'asset/img/offlin.svg' %}" alt="Offline" data-aos="zoom-in-right"
+                        data-aos-duration="1000">
+                    <p>YOLO dengan deteksi objek real-time memastikan indikasi kecurangan terdeteksi tepat dan segera,
+                        memberikan pengawas alat efektif untuk memantau ujian dan menjaga integritasnya.</p>
+                </div>
+            </div>
+            <div class="video-container" data-aos="fade-left" data-aos-duration="1000">
+                <video src="{% static 'asset/vid/demo.mp4' %}" loop autoplay muted></video>
+            </div>
+        </div>
+        <div class="row">
+            <div class="video-container" data-aos="fade-right" data-aos-duration="1000">
+                <video src="{% static 'asset/vid/demo.mp4' %}" loop autoplay muted></video>
+            </div>
+            <div class="content" data-aos="fade-left" data-aos-duration="1000">
+                <h3>How It Work?</h3>
+                <p>Cheator menggunakan MediaPipe untuk menganalisis pose tubuh peserta ujian.
+                    Aplikasi ini menghitung koordinat tubuh dan mendeteksi pola gerakan yang menunjukkan potensi
+                    kecurangan,
+                    seperti menunduk atau melihat ke samping.</p>
+                <p>Jika pola yang mencurigakan terdeteksi, sistem segera memberikan notifikasi kepada pengawas ujian,
+                    memungkinkan tindakan cepat untuk memastikan integritas ujian. Selain itu,
+                    Cheator dirancang untuk memproses video secara langsung, tanpa menyimpan data pribadi, sehingga
+                    menjamin privasi peserta</p>
+                <button id="openModalBtn" class="btn" data-aos="fade-left" data-aos-duration="1500">Lets Try!</button>
+            </div>
+        </div>
+    </section>
+
+    <section class="icons-container">
+        <div class="icons" data-aos="zoom-in" data-aos-duration="1000">
+            <img src="{% static 'asset/img/dl.png' %}" alt="">
+            <div class="info">
+                <h3>YOLO</h3>
+                <span>Motion Detection</span>
+            </div>
+        </div>
+
+        <div class="icons" data-aos="zoom-in" data-aos-duration="1000">
+            <img src="{% static 'asset/img/mediap.png' %}" alt="">
+            <div class="info">
+                <h3>Mediapipe</h3>
+                <span>Pose Estimation & Tracking</span>
+            </div>
+        </div>
+
+        <div class="icons" data-aos="zoom-in" data-aos-duration="1000">
+            <img src="{% static 'asset/img/open.png' %}" alt="">
+            <div class="info">
+                <h3>Open-CV</h3>
+                <span>Computer Vision Library</span>
+            </div>
+        </div>
+
+        <div class="icons" data-aos="zoom-in" data-aos-duration="1000">
+            <img src="{% static 'asset/img/python.png' %}" alt="">
+            <div class="info">
+                <h3>Python</h3>
+                <span>Versatile Programming Language</span>
+            </div>
+        </div>
+
+    </section>
+
+    <section class="contact" id="contact" data-aos="fade-up" data-aos-duration="1000">
+        <h1 class="heading"> <span> Our </span> Team </h1>
+        <div class="row">
+            <!-- Column 1-->
+            <div class="column" data-aos="fade-up-right" data-aos-duration="3000">
+                <div class="card">
+                    <div class="img-container">
+                        <img src="{% static 'asset/img/p.jpeg' %}" alt="" />
+                    </div>
+                    <h3>Muhammad Zufar</h3>
+                    <p>Explane</p>
+                    <div class="icons">
+                        <a href="https:\\google.com">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                        <a href="#">
+                            <i class="fab fa-linkedin"></i>
+                        </a>
+                        <a href="#">
+                            <i class="fab fa-github"></i>
+                        </a>
+                        <a href="#">
+                            <i class="fas fa-envelope"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <!-- Column 2-->
+            <div class="column" data-aos="fade-up" data-aos-duration="3000">
+                <div class="card">
+                    <div class="img-container">
+                        <img src="{% static 'asset/img/p.jpeg' %}" alt="" />
+                    </div>
+                    <h3>Afin Maulana</h3>
+                    <p>Aldous 500 Stack</p>
+                    <div class="icons">
+                        <a href="https:\\google.com">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                        <a href="#">
+                            <i class="fab fa-linkedin"></i>
+                        </a>
+                        <a href="#">
+                            <i class="fab fa-github"></i>
+                        </a>
+                        <a href="#">
+                            <i class="fas fa-envelope"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <!-- Column 3-->
+            <div class="column" data-aos="fade-up" data-aos-duration="3000">
+                <div class="card">
+                    <div class="img-container">
+                        <img src="{% static 'asset/img/p.jpeg' %}" alt="" />
+                    </div>
+                    <h3>Beril Berekhya</h3>
+                    <p>Goldlane</p>
+                    <div class="icons">
+                        <a href="https:\\google.com">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                        <a href="#">
+                            <i class="fab fa-linkedin"></i>
+                        </a>
+                        <a href="#">
+                            <i class="fab fa-github"></i>
+                        </a>
+                        <a href="#">
+                            <i class="fas fa-envelope"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <!-- Column 4-->
+            <div class="column" data-aos="fade-up-left" data-aos-duration="3000">
+                <div class="card">
+                    <div class="img-container">
+                        <img src="{% static 'asset/img/p.jpeg' %}" alt="" />
+                    </div>
+                    <h3>Rievan Averillio</h3>
+                    <p>Jungler</p>
+                    <div class="icons">
+                        <a href="https:\\google.com">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                        <a href="#">
+                            <i class="fab fa-linkedin"></i>
+                        </a>
+                        <a href="#">
+                            <i class="fab fa-github"></i>
+                        </a>
+                        <a href="#">
+                            <i class="fas fa-envelope"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <script>
+        // Get modal element
+        const modal = document.getElementById("myModal");
+
+        // Get button to open the modal
+        const openModalBtn = document.getElementById("openModalBtn");
+        const openModalLink = document.getElementById("openModalLink");
+
+        // Get the element to close the modal (the "x")
+        const closeBtn = document.querySelector(".close-btn");
+
+        // Open modal when button is clicked
+        openModalBtn.addEventListener("click", function () {
+            modal.style.display = "block";
+        });
+
+        openModalLink.addEventListener("click", function () {
+            modal.style.display = "block";
+        });
+
+        // Close modal when "x" is clicked
+        closeBtn.addEventListener("click", function () {
+            modal.style.display = "none";
+        });
+
+        // Close modal when clicking outside the modal content
+        window.addEventListener("click", function (event) {
+            if (event.target === modal) {
+                modal.style.display = "none";
+            }
+        });
+    </script>
+    <script>
+        AOS.init();
+    </script>
+</body>
+
+</html>

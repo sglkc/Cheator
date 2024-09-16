@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Class Room</title>
+</head>
+<body>
+    <h2>Room for Class {{ meeting_url }}</h2>
+    
+    <!-- Video element untuk menampilkan stream kamera -->
+    <video id="localVideo" autoplay playsinline></video>
+
+    <script>
+        // Menggunakan WebRTC API untuk akses kamera
+        const localVideo = document.getElementById('localVideo');
+        
+        // Akses media perangkat (kamera & mikrofon)
+        navigator.mediaDevices.getUserMedia({ video: true, audio: true })
+        .then(function(stream) {
+            // Menampilkan stream kamera di video element
+            localVideo.srcObject = stream;
+        })
+        .catch(function(error) {
+            console.error('Error accessing media devices.', error);
+        });
+    </script>
+</body>
+</html>

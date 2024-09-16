@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.contrib.auth.hashers import make_password
-from .models import User
+from .models import User, Class
 
 class UserAdmin(admin.ModelAdmin):
     list_display = ('nama', 'nim', 'role', 'gender', 'kelas')
@@ -13,5 +13,10 @@ class UserAdmin(admin.ModelAdmin):
         elif obj._state.adding:  # Jika baru ditambahkan
             obj.password = make_password(obj.password)  # Enkripsi password
         super().save_model(request, obj, form, change)
+
+@admin.register(Class)
+class ClassAdmin(admin.ModelAdmin):
+    list_display = ('name', 'meeting_url', 'status')
+    list_editable = ('meeting_url', 'status')
 
 admin.site.register(User, UserAdmin)

@@ -4,34 +4,125 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Home</title>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            color: #333;
+        }
+        h2 {
+            color: #007bff;
+        }
+        .btn {
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            color: #fff;
+            background-color: #007bff;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+        }
+        .btn:hover {
+            background-color: #0056b3;
+        }
+        .input-field {
+            margin: 10px 0;
+        }
+        .input-field label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        .input-field input {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        button {
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            color: #fff;
+            background-color: #007bff;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .messages {
+            margin: 20px 0;
+            padding: 10px;
+            border-radius: 4px;
+        }
+        .success {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        .error {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+    </style>
 </head>
 <body>
-    <h1>Welcome, {{ user.nama }}</h1>
-    <p>This is the home page for students.</p>
+    <h2>Welcome, {{ user.nama }}</h2>
+    <p>Kelas: {{ user.kelas }}</p>
+
+    {% if meeting_url %}
+        <!-- Button Join Class yang mengarahkan ke room berdasarkan URL class -->
+        <a href="{{ meeting_url }}" class="btn" target="_blank">Join Class</a>
+    {% else %}
+        <p>Class is not open yet</p>
+    {% endif %}
 
     <!-- Logout Link -->
-    <a href="{% url 'logout' %}">Logout</a>
+    <a href="{% url 'logout' %}" class="btn">Logout</a>
 
     <!-- Change Password Form -->
     <form method="POST">
         {% csrf_token %}
         <h2>Change Password</h2>
         <div class="input-field">
-            <label for="new_password">New Password:</label>
-            <input type="password" name="new_password" id="new_password" required />
+            <label for="old_password">Password Saat ini:</label>
+            <input type="password" name="old_password" id="old_password" required />
         </div>
         <div class="input-field">
-            <label for="old_password">New Password:</label>
-            <input type="password" name="old_password" id="old_password" required />
+            <label for="new_password">Password Baru:</label>
+            <input type="password" name="new_password" id="new_password" required />
         </div>
         <button type="submit" name="change_password">Change Password</button>
     </form>
 
-    <!-- Display success/error messages -->
-    {% if messages %}
-        {% for message in messages %}
-            <div class="{{ message.tags }}">{{ message }}</div>
-        {% endfor %}
-    {% endif %}
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            {% if messages %}
+                {% for message in messages %}
+                    let type = '{{ message.tags }}';
+                    let title = 'Informasi';
+                    let icon = 'info';
+  
+                    if (type === 'error') {
+                        icon = 'error';
+                        title = 'Oops!';
+                    } else if (type === 'success') {
+                        icon = 'success';
+                        title = "Berhasil"
+                    }
+  
+                    Swal.fire({
+                        icon: icon,
+                        title: title,
+                        text: '{{ message }}',
+                        timer: 5000,
+                        showConfirmButton: true,
+                        confirmButtonText: 'OK'
+                    });
+                {% endfor %}
+            {% endif %}
+        });
+    </script>
 </body>
 </html>

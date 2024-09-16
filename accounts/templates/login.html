@@ -85,7 +85,7 @@
 
                   if (type === 'error') {
                       icon = 'error';
-                      title = 'Hayolo';
+                      title = 'Oops!';
                   } else if (type === 'success') {
                       icon = 'success';
                       title = "Berhasil"
@@ -96,7 +96,8 @@
                       title: title,
                       text: '{{ message }}',
                       timer: 5000,
-                      showConfirmButton: false
+                      showConfirmButton: true,
+                      confirmButtonText: 'OK'
                   });
               {% endfor %}
           {% endif %}

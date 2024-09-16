@@ -1,10 +1,68 @@
-<!-- dashboard.html -->
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+<head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Dashboard Dosen</title>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        h1, h2, h3 {
+            color: #333;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+        }
+        th {
+            background-color: #f4f4f4;
+        }
+        .input-field {
+            margin: 10px 0;
+        }
+        .input-field label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        .input-field input {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        button {
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            color: #fff;
+            background-color: #007bff;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        a {
+            display: inline-block;
+            padding: 10px 15px;
+            color: #007bff;
+            text-decoration: none;
+            border: 1px solid #007bff;
+            border-radius: 4px;
+            margin: 5px;
+        }
+        a:hover {
+            background-color: #007bff;
+            color: #fff;
+        }
+    </style>
 </head>
 <body>
     <h1>
@@ -37,6 +95,68 @@
             {% endfor %}
         </tbody>
     </table>
+
+    {% for class in classes %}
+        <h3>Kelas: {{ class.name }}</h3>
+        <p>Meeting URL: {{ class.meeting_url }}</p>
+        <p>Status: {% if class.status %} Open {% else %} Closed {% endif %}</p>
+        
+        {% if not class.status %}
+            <form method="POST" action="{% url 'open_class' class.id %}">
+                {% csrf_token %}
+                <button type="submit">Open Class</button>
+            </form>
+        {% else %}
+            <form method="POST" action="{% url 'close_class' %}">
+                {% csrf_token %}
+                <button type="submit">Close Class</button>
+            </form>
+        {% endif %}
+    {% endfor %}
+
+    <form method="POST">
+        {% csrf_token %}
+        <h2>Change Password</h2>
+        <div class="input-field">
+            <label for="old_password">Password Saat ini:</label>
+            <input type="password" name="old_password" id="old_password" required />
+        </div>
+        <div class="input-field">
+            <label for="new_password">Password Baru:</label>
+            <input type="password" name="new_password" id="new_password" required />
+        </div>
+        <button type="submit" name="change_password">Change Password</button>
+    </form>
+
     <a href="{% url 'logout' %}">Logout</a>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            {% if messages %}
+                {% for message in messages %}
+                    let type = '{{ message.tags }}';
+                    let title = 'Informasi';
+                    let icon = 'info';
+
+                    if (type === 'error') {
+                        icon = 'error';
+                        title = 'Oops!';
+                    } else if (type === 'success') {
+                        icon = 'success';
+                        title = 'Berhasil';
+                    }
+
+                    Swal.fire({
+                        icon: icon,
+                        title: title,
+                        text: '{{ message }}',
+                        timer: 5000,
+                        showConfirmButton: true,
+                        confirmButtonText: 'OK'
+                    });
+                {% endfor %}
+            {% endif %}
+        });
+    </script>
 </body>
 </html>

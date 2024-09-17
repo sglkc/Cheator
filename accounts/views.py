@@ -1,7 +1,45 @@
+import io
+import json
+import cv2
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.contrib.auth.hashers import make_password, check_password
+import numpy as np
 from .models import User, Class
+import base64
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+from. import cheat  # Pastikan file cheat.py diimport
+from PIL import Image
+
+@csrf_exempt
+def process_frame(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        image_data = data.get('image', '')
+
+        # Decode base64 image data
+        image_data = image_data.split(',')[1]  # Remove the 'data:image/jpeg;base64,' prefix
+        image_data = base64.b64decode(image_data)
+
+        # Convert binary data to image
+        image = Image.open(io.BytesIO(image_data))
+        image = np.array(image)
+
+        # Konversi dari RGB ke BGR untuk OpenCV
+        image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
+
+        # Proses gambar dengan cheat.py
+        processed_image = cheat.process_frame(image)
+
+        # Encode hasilnya untuk dikirim balik ke client
+        _, buffer = cv2.imencode('.jpg', processed_image)
+        encoded_image = base64.b64encode(buffer).decode()
+
+        # Return image as base64 encoded string
+        return JsonResponse({'image': 'data:image/jpeg;base64,' + encoded_image})
+    
+    return JsonResponse({'error': 'Invalid request method'}, status=400)
 
 def login_view(request):
     if request.method == 'POST':

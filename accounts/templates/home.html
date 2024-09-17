@@ -72,8 +72,10 @@
     <p>Kelas: {{ user.kelas }}</p>
 
     {% if meeting_url %}
-        <!-- Button Join Class yang mengarahkan ke room berdasarkan URL class -->
-        <a href="{{ meeting_url }}" class="btn" target="_blank">Join Class</a>
+    <form method="POST" action="{% url 'join_class' %}">
+        {% csrf_token %}
+        <button type="submit" class="btn">Join Class</button>
+    </form>
     {% else %}
         <p>Class is not open yet</p>
     {% endif %}

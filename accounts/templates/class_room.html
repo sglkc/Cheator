@@ -4,26 +4,73 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Class Room</title>
+    <style>
+        #videoElement {
+            width: 100%;
+            height: auto;
+            border: 1px solid black;
+        }
+        #processedImage {
+            width: 100%;
+            height: auto;
+            border: 1px solid black;
+        }
+    </style>
 </head>
 <body>
-    <h2>Room for Class {{ meeting_url }}</h2>
-    
-    <!-- Video element untuk menampilkan stream kamera -->
-    <video id="localVideo" autoplay playsinline></video>
+    <h2>Class Room: {{ meeting_url }}</h2>
+    <video id="videoElement" autoplay></video>
+    <canvas id="canvasElement" style="display:none;"></canvas>
+    <img id="processedImage" alt="Processed Image">
 
     <script>
-        // Menggunakan WebRTC API untuk akses kamera
-        const localVideo = document.getElementById('localVideo');
-        
-        // Akses media perangkat (kamera & mikrofon)
-        navigator.mediaDevices.getUserMedia({ video: true, audio: true })
-        .then(function(stream) {
-            // Menampilkan stream kamera di video element
-            localVideo.srcObject = stream;
-        })
-        .catch(function(error) {
-            console.error('Error accessing media devices.', error);
-        });
+        // Mengakses kamera
+        const video = document.getElementById('videoElement');
+        const canvas = document.getElementById('canvasElement');
+        const context = canvas.getContext('2d');
+        const processedImage = document.getElementById('processedImage');
+
+        async function startCamera() {
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+                video.srcObject = stream;
+
+                video.onloadedmetadata = () => {
+                    video.play();
+                };
+
+                // Proses frame dari kamera
+                setInterval(async () => {
+                    canvas.width = video.videoWidth;
+                    canvas.height = video.videoHeight;
+                    context.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+                    // Kirim frame ke server
+                    const frame = canvas.toDataURL('image/jpeg');
+                    await fetch('/process_frame/', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRFToken': '{{ csrf_token }}'
+                        },
+                        body: JSON.stringify({ image: frame })
+                    })
+                    .then(response => response.json()) // Parse JSON response
+                    .then(data => {
+                        // Set src untuk processedImage dengan base64 string dari server
+                        processedImage.src = data.image;
+                    })
+                    .catch(error => {
+                        console.error('Error processing frame:', error);
+                    });
+                }, 1000); // Proses setiap 1 detik
+
+            } catch (error) {
+                console.error('Error accessing media devices.', error);
+            }
+        }
+
+        startCamera();
     </script>
 </body>
 </html>

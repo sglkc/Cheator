@@ -1,0 +1,96 @@
+* {
+    text-decoration: none;
+    text-transform: none;
+    transition: .2s linear;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #202124;
+    margin: 0;
+    font-family: Arial, sans-serif;
+    color: white;
+}
+
+.container {
+    text-align: center;
+    position: relative;
+    width: 1000px;
+    height: 565px;
+    border-radius: 5px;
+    overflow: hidden;
+    background-color: black;
+}
+
+canvas {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: none;
+}
+
+img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: none;
+}
+
+.controls {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 20px;
+}
+
+.control-button {
+    width: 50px;
+    height: 50px;
+    background-color: #EA4335; /* Red background for off state */
+    border: none;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.control-button.active {
+    background-color: #34A853; /* Green background for on state */
+}
+
+.control-button:hover {
+    background-color: #5f6368;
+}
+
+.control-button:active {
+    background-color: #70757a;
+}
+
+.control-button .material-icons {
+    color: white;
+    font-size: 24px;
+}
+
+.logo {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: white;
+    text-decoration: none;
+    padding: 1rem 3%;
+    display: flex;
+}
+
+.logo span {
+    color: red;
+}

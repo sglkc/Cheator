@@ -3,74 +3,110 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Class Room</title>
-    <style>
-        #videoElement {
-            width: 100%;
-            height: auto;
-            border: 1px solid black;
-        }
-        #processedImage {
-            width: 100%;
-            height: auto;
-            border: 1px solid black;
-        }
-    </style>
+    <title>Offline</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/web.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+    <script src="https://cdn.socket.io/4.0.0/socket.io.min.js"></script>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 </head>
 <body>
-    <h2>Class Room: {{ meeting_url }}</h2>
-    <video id="videoElement" autoplay></video>
-    <canvas id="canvasElement" style="display:none;"></canvas>
-    <img id="processedImage" alt="Processed Image">
+    <div class="container">
+        <canvas id="videoCanvas"></canvas>
+        <img id="processedImage" alt="Processed video feed">
+        <div>
+            <a href="/" class="logo">Cheator <span>.</span></a>
+        </div>
+        <div class="controls">
+            <button class="control-button" id="toggleButton">
+                <span class="material-icons" id="toggleIcon">videocam_off</span>
+            </button>
+        </div>
+    </div>
 
     <script>
-        // Mengakses kamera
-        const video = document.getElementById('videoElement');
-        const canvas = document.getElementById('canvasElement');
-        const context = canvas.getContext('2d');
-        const processedImage = document.getElementById('processedImage');
+        document.addEventListener('DOMContentLoaded', () => {
+            const videoCanvas = document.getElementById('videoCanvas');
+            const processedImage = document.getElementById('processedImage');
+            const toggleButton = document.getElementById('toggleButton');
+            const toggleIcon = document.getElementById('toggleIcon');
+            const socket = new WebSocket('ws://' + window.location.host + '/ws/video_feed/');
 
-        async function startCamera() {
-            try {
-                const stream = await navigator.mediaDevices.getUserMedia({ video: true });
-                video.srcObject = stream;
+            const canvasContext = videoCanvas.getContext('2d');
+            let stream = null;
+            let cameraActive = false;
+            let proses = false;
 
-                video.onloadedmetadata = () => {
-                    video.play();
-                };
+            function startCamera() {
+                navigator.mediaDevices.getUserMedia({ video: { width: 640, height: 480 } })
+                    .then((mediaStream) => {
+                        stream = mediaStream;
+                        videoCanvas.width = 640;
+                        videoCanvas.height = 480;
 
-                // Proses frame dari kamera
-                setInterval(async () => {
-                    canvas.width = video.videoWidth;
-                    canvas.height = video.videoHeight;
-                    context.drawImage(video, 0, 0, canvas.width, canvas.height);
+                        const videoTrack = stream.getVideoTracks()[0];
+                        const video = document.createElement('video');
+                        video.srcObject = stream;
+                        video.play();
 
-                    // Kirim frame ke server
-                    const frame = canvas.toDataURL('image/jpeg');
-                    await fetch('/process_frame/', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'X-CSRFToken': '{{ csrf_token }}'
-                        },
-                        body: JSON.stringify({ image: frame })
+                        video.addEventListener('loadedmetadata', () => {
+                            function drawFrame() {
+                                if (!cameraActive || proses) return;
+
+                                canvasContext.drawImage(video, 0, 0, videoCanvas.width, videoCanvas.height);
+
+                                videoCanvas.toBlob((blob) => {
+                                    const reader = new FileReader();
+                                    reader.onloadend = () => {
+                                        socket.send(reader.result);
+                                        proses = true;
+                                    };
+                                    reader.readAsArrayBuffer(blob);
+                                }, 'image/jpeg', 0.3);
+                            }
+
+                            setInterval(drawFrame, 50);
+
+                            socket.onmessage = (event) => {
+                                proses = false;
+                                processedImage.src = event.data;
+                                processedImage.style.display = 'block';
+                            };
+
+                            cameraActive = true;
+                            toggleButton.classList.add('active');
+                            toggleIcon.textContent = 'videocam';
+                        });
                     })
-                    .then(response => response.json()) // Parse JSON response
-                    .then(data => {
-                        // Set src untuk processedImage dengan base64 string dari server
-                        processedImage.src = data.image;
-                    })
-                    .catch(error => {
-                        console.error('Error processing frame:', error);
+                    .catch((err) => {
+                        console.error("Error accessing camera: ", err);
                     });
-                }, 1000); // Proses setiap 1 detik
-
-            } catch (error) {
-                console.error('Error accessing media devices.', error);
             }
-        }
 
-        startCamera();
+            function stopCamera() {
+                if (stream) {
+                    let tracks = stream.getTracks();
+                    tracks.forEach(track => track.stop());
+                    stream = null;
+                    cameraActive = false;
+                    videoCanvas.style.display = 'none';
+                    processedImage.style.display = 'none';
+                    toggleButton.classList.remove('active');
+                    toggleIcon.textContent = 'videocam_off';
+                    setTimeout(() => {
+                        location.reload();
+                    }, 200);
+                }
+            }
+
+            toggleButton.addEventListener('click', () => {
+                if (cameraActive) {
+                    stopCamera();
+                } else {
+                    startCamera();
+                }
+            });
+        });
     </script>
 </body>
 </html>

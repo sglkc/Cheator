@@ -12,4 +12,5 @@ urlpatterns = [
     path('join_class/', join_class_view, name='join_class'),
     path('class/room/<str:meeting_url>/', class_room_view, name='class_room'),
     path('process_frame/', process_frame, name='process_frame'),
+    path('video-feed/', video_feed_view, name='video_feed'),
 ]

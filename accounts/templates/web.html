@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Offline</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/web.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+    <script src="https://cdn.socket.io/4.0.0/socket.io.min.js"></script>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <canvas id="videoCanvas"></canvas>
+        <img id="processedImage" alt="Processed video feed">
+        <div>
+            <a href="/" class="logo">Cheator <span>.</span></a>
+        </div>
+        <div class="controls">
+            <button class="control-button" id="toggleButton">
+                <span class="material-icons" id="toggleIcon">videocam_off</span>
+            </button>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const videoCanvas = document.getElementById('videoCanvas');
+            const processedImage = document.getElementById('processedImage');
+            const toggleButton = document.getElementById('toggleButton');
+            const toggleIcon = document.getElementById('toggleIcon');
+            const socket = new WebSocket('ws://' + window.location.host + '/ws/video_feed/');
+
+            const canvasContext = videoCanvas.getContext('2d');
+            let stream = null;
+            let cameraActive = false;
+            let proses = false;
+
+            function startCamera() {
+                navigator.mediaDevices.getUserMedia({ video: { width: 640, height: 480 } })
+                    .then((mediaStream) => {
+                        stream = mediaStream;
+                        videoCanvas.width = 640;
+                        videoCanvas.height = 480;
+
+                        const videoTrack = stream.getVideoTracks()[0];
+                        const video = document.createElement('video');
+                        video.srcObject = stream;
+                        video.play();
+
+                        video.addEventListener('loadedmetadata', () => {
+                            function drawFrame() {
+                                if (!cameraActive || proses) return;
+
+                                canvasContext.drawImage(video, 0, 0, videoCanvas.width, videoCanvas.height);
+
+                                videoCanvas.toBlob((blob) => {
+                                    const reader = new FileReader();
+                                    reader.onloadend = () => {
+                                        socket.send(reader.result);
+                                        proses = true;
+                                    };
+                                    reader.readAsArrayBuffer(blob);
+                                }, 'image/jpeg', 0.5);
+                            }
+
+                            setInterval(drawFrame, 25);
+
+                            socket.onmessage = (event) => {
+                                proses = false;
+                                processedImage.src = event.data;
+                                processedImage.style.display = 'block';
+                            };
+
+                            cameraActive = true;
+                            toggleButton.classList.add('active');
+                            toggleIcon.textContent = 'videocam';
+                        });
+                    })
+                    .catch((err) => {
+                        console.error("Error accessing camera: ", err);
+                    });
+            }
+
+            function stopCamera() {
+                if (stream) {
+                    let tracks = stream.getTracks();
+                    tracks.forEach(track => track.stop());
+                    stream = null;
+                    cameraActive = false;
+                    videoCanvas.style.display = 'none';
+                    processedImage.style.display = 'none';
+                    toggleButton.classList.remove('active');
+                    toggleIcon.textContent = 'videocam_off';
+                    setTimeout(() => {
+                        location.reload();
+                    }, 500);
+                }
+            }
+
+            toggleButton.addEventListener('click', () => {
+                if (cameraActive) {
+                    stopCamera();
+                } else {
+                    startCamera();
+                }
+            });
+        });
+    </script>
+</body>
+</html>

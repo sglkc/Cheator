@@ -187,6 +187,8 @@ def logout_view(request):
     return redirect('login')
 
 def join_class_view(request):
+    if not request.session.get('is_logged_in') or not request.session.get('user_id'):
+        return redirect('login')
     # Ambil user dari sesi
     user_id = request.session.get('user_id')
     try:
@@ -206,6 +208,11 @@ def join_class_view(request):
 def index_view(request):
     return render(request, 'index.html')
 
+def video_feed_view(request):
+    return render(request, 'web.html')
+
 def class_room_view(request, meeting_url):
+    if not request.session.get('is_logged_in') or not request.session.get('user_id'):
+        return redirect('login')
     # Tampilkan room berdasarkan URL yang dimasukkan
     return render(request, 'class_room.html', {'meeting_url': meeting_url})

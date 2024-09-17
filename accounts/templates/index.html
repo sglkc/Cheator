@@ -69,7 +69,7 @@
                 <img src="{% static 'asset/img/modal.svg' %}" alt="modalimg" class="modal-img" />
                 <div class="modal-buttons">
                     <a href="{% url 'login' %}" class="btn" id="onlineBtn">Online</a>
-                    <button class="btn" id="offlineBtn">Offline</button>
+                    <a href="{% url 'video_feed' %}" class="btn" id="offlineBtn">Offline</a>
                 </div>
             </div>
         </div>
@@ -80,7 +80,7 @@
         <h1 class="heading" data-aos="fade-up" data-aos-duration="1000"> <span> Over</span>view </h1>
         <div class="row">
             <div class="video-container" data-aos="fade-right" data-aos-duration="1000">
-                <video src="{% static 'asset/vid/demo.mp4' %}" loop autoplay muted></video>
+                <video src="{% static 'asset/video/demo.mp4' %}" loop autoplay muted></video>
             </div>
             <div class="content" data-aos="fade-left" data-aos-duration="1000">
                 <h3>Virtual Proctoring</h3>
@@ -109,12 +109,12 @@
                 </div>
             </div>
             <div class="video-container" data-aos="fade-left" data-aos-duration="1000">
-                <video src="{% static 'asset/vid/demo.mp4' %}" loop autoplay muted></video>
+                <video src="{% static 'asset/video/demo.mp4' %}" loop autoplay muted></video>
             </div>
         </div>
         <div class="row">
             <div class="video-container" data-aos="fade-right" data-aos-duration="1000">
-                <video src="{% static 'asset/vid/demo.mp4' %}" loop autoplay muted></video>
+                <video src="{% static 'asset/video/demo.mp4' %}" loop autoplay muted></video>
             </div>
             <div class="content" data-aos="fade-left" data-aos-duration="1000">
                 <h3>How It Work?</h3>

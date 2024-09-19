@@ -10,6 +10,9 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
+
 </head>
 
 <body>
@@ -59,7 +62,7 @@
         </div>
     </section>
 
-    <!-- Modal Structure -->
+    {% comment %} <!-- Modal Structure -->
     <div id="myModal" class="modal">
         <div class="modal-content">
             <span class="close-btn">&times;</span>
@@ -73,7 +76,7 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div> {% endcomment %}
 
 
     <section class="about" id="about">
@@ -268,39 +271,51 @@
         </div>
     </section>
     <script>
-        // Get modal element
-        const modal = document.getElementById("myModal");
-
-        // Get button to open the modal
-        const openModalBtn = document.getElementById("openModalBtn");
-        const openModalLink = document.getElementById("openModalLink");
-
-        // Get the element to close the modal (the "x")
-        const closeBtn = document.querySelector(".close-btn");
-
-        // Open modal when button is clicked
-        openModalBtn.addEventListener("click", function () {
-            modal.style.display = "block";
-        });
-
-        openModalLink.addEventListener("click", function () {
-            modal.style.display = "block";
-        });
-
-        // Close modal when "x" is clicked
-        closeBtn.addEventListener("click", function () {
-            modal.style.display = "none";
-        });
-
-        // Close modal when clicking outside the modal content
-        window.addEventListener("click", function (event) {
-            if (event.target === modal) {
-                modal.style.display = "none";
-            }
-        });
+        AOS.init();
     </script>
     <script>
-        AOS.init();
+        document.addEventListener('DOMContentLoaded', () => {
+            const openModalLink = document.getElementById('openModalLink');
+            const openModalBtn = document.getElementById('openModalBtn');
+          
+            function showModal() {
+              Swal.fire({
+                title: 'Want to try?',
+                text: 'Choose what you want to try!',
+                imageUrl: '{% static 'asset/img/modal.svg' %}', // Ganti dengan path gambar yang sesuai
+                imageWidth: 600, // Lebar gambar
+                imageHeight: 250, // Tinggi gambar
+                imageAlt: 'Modal Image',
+                showCancelButton: true,
+                confirmButtonText: 'Online',
+                cancelButtonText: 'Offline',
+                customClass: {
+                  confirmButton: 'btn btn-primary', // Sesuaikan dengan kelas tombol yang kamu inginkan
+                  cancelButton: 'btn btn-secondary',
+                  popup: 'modal-popup',
+                  title: 'modal-title',
+                },
+                buttonsStyling: false
+              }).then((result) => {
+                if (result.isConfirmed) {
+                  window.location.href = '{% url 'login' %}';
+                } else if (result.dismiss === Swal.DismissReason.cancel) {
+                  window.location.href = '{% url 'video_feed' %}';
+                }
+              });
+            }
+          
+            // Menambahkan event listener untuk openModalLink
+            openModalLink.addEventListener('click', (event) => {
+              event.preventDefault(); // Mencegah aksi default dari link
+              showModal(); // Menampilkan modal
+            });
+          
+            // Menambahkan event listener untuk openModalBtn
+            openModalBtn.addEventListener('click', () => {
+              showModal(); // Menampilkan modal
+            });
+          });          
     </script>
 </body>
 

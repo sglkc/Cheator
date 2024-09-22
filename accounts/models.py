@@ -8,6 +8,8 @@ class User(models.Model):
     kelas = models.CharField(max_length=10, null=True, blank=True)
     role = models.CharField(max_length=10)  # 'mahasiswa' atau 'dosen'
     gender = models.CharField(max_length=10, null=True, blank=True)
+    pnaggilan = models.CharField(max_length=10, null=True, blank=True)
+
 
 class Class(models.Model):
     name = models.CharField(max_length=100)

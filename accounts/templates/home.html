@@ -4,87 +4,151 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Home</title>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/landing.css' %}" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
+         /* Modal Styles */
+         .newmodal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .newmodal-content {
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            width: 90%;
+            max-width: 400px;
+            position: relative;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .close {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            font-size: 24px;
+            color: #888;
+            cursor: pointer;
+        }
+
+        .close:hover {
             color: #333;
         }
+
         h2 {
-            color: #007bff;
+            font-size: 22px;
+            margin-bottom: 20px;
+            color: #333;
         }
-        .btn {
-            padding: 10px 15px;
-            border: none;
-            border-radius: 4px;
-            color: #fff;
-            background-color: #007bff;
-            cursor: pointer;
-            text-decoration: none;
-            display: inline-block;
-            font-size: 16px;
-        }
-        .btn:hover {
-            background-color: #0056b3;
-        }
+
         .input-field {
-            margin: 10px 0;
+            margin-bottom: 15px;
         }
-        .input-field label {
+
+        label {
             display: block;
+            font-weight: bold;
             margin-bottom: 5px;
         }
-        .input-field input {
+
+        input[type="password"] {
             width: 100%;
-            padding: 8px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-        }
-        button {
-            padding: 10px 15px;
-            border: none;
-            border-radius: 4px;
-            color: #fff;
-            background-color: #007bff;
-            cursor: pointer;
-        }
-        button:hover {
-            background-color: #0056b3;
-        }
-        .messages {
-            margin: 20px 0;
             padding: 10px;
-            border-radius: 4px;
+            margin-bottom: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-sizing: border-box;
         }
-        .success {
-            background-color: #d4edda;
-            color: #155724;
+
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #3498db;
+            border: none;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
         }
-        .error {
-            background-color: #f8d7da;
-            color: #721c24;
+
+        button:hover {
+            background-color: #2980b9;
         }
     </style>
 </head>
 <body>
-    <h2>Welcome, {{ user.nama }}</h2>
-    <p>Kelas: {{ user.kelas }}</p>
+<header>
+    <a href='#' class="logo">Classroom <span>.</span></a>
+    <nav class="navbar">
+        <a href="#" id="openNewModalLink">Profile</a>
+        <a href="{% url 'logout' %}">Logout</a>
+    </nav>
+</header>
+<section class="home">
+    <div class="content">
+    <h3>Hallo {{ user.pnaggilan }}!</h3>
+    <p>Welcome to {{ user.kelas }}</p>
 
     {% if meeting_url %}
     <form method="POST" action="{% url 'join_class' %}">
         {% csrf_token %}
-        <button type="submit" class="btn">Join Class</button>
+        <p style="padding-bottom: 5px;">The Class is now Open!</p>
+        <div>
+            <a style="--clr: #000" class="btn-3" href="{% url 'join_class' %}">
+                <span class="button__icon-wrapper">
+                    <svg width="10" class="button__icon-svg" xmlns="http://www.w3.org/2000/svg" fill="none"
+                        viewBox="0 0 14 15">
+                        <path fill="currentColor"
+                            d="M13.376 11.552l-.264-10.44-10.44-.24.024 2.28 6.96-.048L.2 12.56l1.488 1.488 9.432-9.432-.048 6.912 2.304.024z">
+                        </path>
+                    </svg>
+
+                    <svg class="button__icon-svg button__icon-svg--copy" xmlns="http://www.w3.org/2000/svg"
+                        width="10" fill="none" viewBox="0 0 14 15">
+                        <path fill="currentColor"
+                            d="M13.376 11.552l-.264-10.44-10.44-.24.024 2.28 6.96-.048L.2 12.56l1.488 1.488 9.432-9.432-.048 6.912 2.304.024z">
+                        </path>
+                    </svg>
+                </span>
+                Join Classmeet
+            </a>
+        </div>
     </form>
     {% else %}
-        <p>Class is not open yet</p>
+        <p >Oops, There is no class at the moment, please wait for the class to open.</p>
     {% endif %}
 
-    <!-- Logout Link -->
-    <a href="{% url 'logout' %}" class="btn">Logout</a>
-
     <!-- Change Password Form -->
-    <form method="POST">
+    {% comment %} <form method="POST">
         {% csrf_token %}
         <h2>Change Password</h2>
         <div class="input-field">
@@ -96,7 +160,62 @@
             <input type="password" name="new_password" id="new_password" required />
         </div>
         <button type="submit" name="change_password">Change Password</button>
-    </form>
+    </form> {% endcomment %}
+    </div>
+    <div class="image">
+        <img src="{% static 'asset/img/home.svg' %}" alt="Home image" />
+    </div>
+</section>
+
+<div id="openNewModal" class="newmodal">
+    <div class="newmodal-content">
+        <span class="close" id="closeNewModal">&times;</span>
+        <!-- Change Password Form -->
+        <form method="POST">
+            {% csrf_token %}
+            <h2>Change Password</h2>
+            <div class="input-field">
+                <label for="old_password">Password Saat ini:</label>
+                <input type="password" name="old_password" id="old_password" required />
+            </div>
+            <div class="input-field">
+                <label for="new_password">Password Baru:</label>
+                <input type="password" name="new_password" id="new_password" required />
+            </div>
+            <button type="submit" name="change_password">Change Password</button>
+        </form>
+    </div>
+</div>
+
+<script>
+    // Get modal elements
+    const newModal = document.getElementById('openNewModal');
+    const openNewModalLink = document.getElementById('openNewModalLink');
+    const closeNewModal = document.getElementById('closeNewModal');
+
+    // Ensure modal is hidden on page load
+    window.onload = function() {
+        newModal.style.display = "none";
+    }
+
+    // Open modal when link is clicked
+    openNewModalLink.onclick = function(event) {
+        event.preventDefault(); // Prevent default anchor behavior
+        newModal.style.display = "flex";
+    }
+
+    // Close modal when the close button is clicked
+    closeNewModal.onclick = function() {
+        newModal.style.display = "none";
+    }
+
+    // Close modal when clicking outside the modal content
+    window.onclick = function(event) {
+        if (event.target == newModal) {
+            newModal.style.display = "none";
+        }
+    }
+</script>
 
     <script>
         document.addEventListener('DOMContentLoaded', function () {

@@ -157,7 +157,6 @@ def open_class_view(request, class_id):
     return redirect('dashboard')
 
 def close_class_view(request):
-    # Pastikan hanya pengajar yang bisa mengakses fungsi ini
     user_id = request.session.get('user_id')
     
     try:
@@ -166,14 +165,9 @@ def close_class_view(request):
         return redirect('login')
 
     if user.role == 'dosen':
-        # Cari kelas berdasarkan nama kelas dari user dosen
         kelas = get_object_or_404(Class, name=user.kelas)
-        
-        # Ubah status kelas menjadi 'False' (Close Class)
         kelas.status = False
         kelas.save()
-        
-        # Berikan feedback ke pengguna
         messages.success(request, f'Kelas {kelas.name} sudah ditutup.')
     else:
         messages.error(request, 'Anda tidak memiliki izin untuk menutup kelas ini.')
@@ -181,7 +175,6 @@ def close_class_view(request):
     return redirect('dashboard')
 
 def logout_view(request):
-    # Hapus informasi sesi pengguna
     request.session.flush()
     messages.success(request, 'Anda sudah Logout')
     return redirect('login')

@@ -121,7 +121,6 @@
     {% if meeting_url %}
     <form method="POST" action="{% url 'join_class' %}">
         {% csrf_token %}
-        <p style="padding-bottom: 5px;">The Class is now Open!</p>
         <div>
             <a style="--clr: #000" class="btn-3" href="{% url 'join_class' %}">
                 <span class="button__icon-wrapper">

@@ -145,28 +145,13 @@
     {% else %}
         <p >Oops, There is no class at the moment, please wait for the class to open.</p>
     {% endif %}
-
-    <!-- Change Password Form -->
-    {% comment %} <form method="POST">
-        {% csrf_token %}
-        <h2>Change Password</h2>
-        <div class="input-field">
-            <label for="old_password">Password Saat ini:</label>
-            <input type="password" name="old_password" id="old_password" required />
-        </div>
-        <div class="input-field">
-            <label for="new_password">Password Baru:</label>
-            <input type="password" name="new_password" id="new_password" required />
-        </div>
-        <button type="submit" name="change_password">Change Password</button>
-    </form> {% endcomment %}
     </div>
     <div class="image">
         <img src="{% static 'asset/img/home.svg' %}" alt="Home image" />
     </div>
 </section>
 
-<div id="openNewModal" class="newmodal">
+<div id="openNewModal" class="newmodal" style="display: none;">
     <div class="newmodal-content">
         <span class="close" id="closeNewModal">&times;</span>
         <!-- Change Password Form -->

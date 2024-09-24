@@ -3,77 +3,165 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Dashboard Dosen</title>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <title>Dashboard</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/landing.css' %}" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-        }
-        h1, h2, h3 {
-            color: #333;
-        }
-        table {
+        /* Modal Styles */
+        .newmodal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
             width: 100%;
-            border-collapse: collapse;
-            margin: 20px 0;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
-        th, td {
-            border: 1px solid #ddd;
-            padding: 8px;
+
+        .newmodal-content {
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            width: 90%;
+            max-width: 400px;
+            position: relative;
+            animation: fadeIn 0.5s ease-in-out;
         }
-        th {
-            background-color: #f4f4f4;
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
         }
-        .input-field {
-            margin: 10px 0;
-        }
-        .input-field label {
-            display: block;
-            margin-bottom: 5px;
-        }
-        .input-field input {
-            width: 100%;
-            padding: 8px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-        }
-        button {
-            padding: 10px 15px;
-            border: none;
-            border-radius: 4px;
-            color: #fff;
-            background-color: #007bff;
+
+        .close {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            font-size: 24px;
+            color: #888;
             cursor: pointer;
         }
-        button:hover {
-            background-color: #0056b3;
+
+        .close:hover {
+            color: #333;
         }
-        a {
-            display: inline-block;
-            padding: 10px 15px;
-            color: #007bff;
-            text-decoration: none;
-            border: 1px solid #007bff;
-            border-radius: 4px;
-            margin: 5px;
+
+        h2 {
+            font-size: 22px;
+            margin-bottom: 20px;
+            color: #333;
         }
-        a:hover {
-            background-color: #007bff;
-            color: #fff;
+
+        .input-field {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        input[type="password"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-sizing: border-box;
         }
     </style>
 </head>
 <body>
-    <h1>
-        {% if user.gender == 'P' %}
-            Selamat datang Pak {{ user.nama }}
-        {% elif user.gender == 'W' %}
-            Selamat datang Bu {{ user.nama }}
+    <header>
+        <a href='web' class="logo">Dashboard <span>.</span></a>
+        <nav class="navbar">
+            <a href="#" id="openNewModalLink">Profile</a>
+            <a href="{% url 'logout' %}">Logout</a>
+        </nav>
+    </header>
+    <section class="home">
+        <div class="content">
+        <h3>{% if user.gender == 'P' %}
+            Halo Pak {{ user.pnaggilan}}!
+            {% elif user.gender == 'W' %}
+            Halo Bu {{ user.pnaggilan}}!
+            {% else %}
+                Selamat datang {{ user.nama }}
+            {% endif %}</h3>
+        {% for class in classes %}
+        <p>Status: {% if class.status %} Open {% else %} Closed {% endif %}</p>
+        
+        {% if not class.status %}
+            <form method="POST" action="{% url 'open_class' class.id %}">
+                {% csrf_token %}
+                <a style="--clr: #000" class="btn-3" href="{% url 'open_class' class.id %}">
+                    <span class="button__icon-wrapper">
+                        <svg width="10" class="button__icon-svg" xmlns="http://www.w3.org/2000/svg" fill="none"
+                            viewBox="0 0 14 15">
+                            <path fill="currentColor"
+                                d="M13.376 11.552l-.264-10.44-10.44-.24.024 2.28 6.96-.048L.2 12.56l1.488 1.488 9.432-9.432-.048 6.912 2.304.024z">
+                            </path>
+                        </svg>
+    
+                        <svg class="button__icon-svg button__icon-svg--copy" xmlns="http://www.w3.org/2000/svg"
+                            width="10" fill="none" viewBox="0 0 14 15">
+                            <path fill="currentColor"
+                                d="M13.376 11.552l-.264-10.44-10.44-.24.024 2.28 6.96-.048L.2 12.56l1.488 1.488 9.432-9.432-.048 6.912 2.304.024z">
+                            </path>
+                        </svg>
+                    </span>
+                    Open Class
+                </a>
+            </form>
         {% else %}
-            Selamat datang {{ user.nama }}
+        <p style="padding-bottom: 0px;">Kelas: {{ class.name }}</p>
+        <p>Meeting URL: {{ class.meeting_url }}</p>
+            <form method="POST" action="{% url 'close_class' %}">
+                {% csrf_token %}
+                <a style="--clr: #000" class="btn-3" href="{% url 'close_class' %}">
+                    <span class="button__icon-wrapper">
+                        <svg width="10" class="button__icon-svg" xmlns="http://www.w3.org/2000/svg" fill="none"
+                            viewBox="0 0 14 15">
+                            <path fill="currentColor"
+                                d="M13.376 11.552l-.264-10.44-10.44-.24.024 2.28 6.96-.048L.2 12.56l1.488 1.488 9.432-9.432-.048 6.912 2.304.024z">
+                            </path>
+                        </svg>
+    
+                        <svg class="button__icon-svg button__icon-svg--copy" xmlns="http://www.w3.org/2000/svg"
+                            width="10" fill="none" viewBox="0 0 14 15">
+                            <path fill="currentColor"
+                                d="M13.376 11.552l-.264-10.44-10.44-.24.024 2.28 6.96-.048L.2 12.56l1.488 1.488 9.432-9.432-.048 6.912 2.304.024z">
+                            </path>
+                        </svg>
+                    </span>
+                    Close Class
+                </a>
+            </form>
         {% endif %}
-    </h1>
+    {% endfor %}
+        </div>
+        <div class="image">
+            <img src="{% static 'asset/img/dash.svg' %}" alt="Home image" />
+        </div>
+    </section>
+
     <h2>Daftar Mahasiswa di Kelas {{ user.kelas }}</h2>
     <table>
         <thead>
@@ -96,39 +184,55 @@
         </tbody>
     </table>
 
-    {% for class in classes %}
-        <h3>Kelas: {{ class.name }}</h3>
-        <p>Meeting URL: {{ class.meeting_url }}</p>
-        <p>Status: {% if class.status %} Open {% else %} Closed {% endif %}</p>
-        
-        {% if not class.status %}
-            <form method="POST" action="{% url 'open_class' class.id %}">
+    <div id="openNewModal" class="newmodal" style="display: none;">
+        <div class="newmodal-content">
+            <span class="close" id="closeNewModal">&times;</span>
+            <!-- Change Password Form -->
+            <form method="POST">
                 {% csrf_token %}
-                <button type="submit">Open Class</button>
+                <h2>Change Password</h2>
+                <div class="input-field">
+                    <label for="old_password">Password Saat ini:</label>
+                    <input type="password" name="old_password" id="old_password" required />
+                </div>
+                <div class="input-field">
+                    <label for="new_password">Password Baru:</label>
+                    <input type="password" name="new_password" id="new_password" required />
+                </div>
+                <button type="submit" name="change_password">Change Password</button>
             </form>
-        {% else %}
-            <form method="POST" action="{% url 'close_class' %}">
-                {% csrf_token %}
-                <button type="submit">Close Class</button>
-            </form>
-        {% endif %}
-    {% endfor %}
-
-    <form method="POST">
-        {% csrf_token %}
-        <h2>Change Password</h2>
-        <div class="input-field">
-            <label for="old_password">Password Saat ini:</label>
-            <input type="password" name="old_password" id="old_password" required />
         </div>
-        <div class="input-field">
-            <label for="new_password">Password Baru:</label>
-            <input type="password" name="new_password" id="new_password" required />
-        </div>
-        <button type="submit" name="change_password">Change Password</button>
-    </form>
+    </div>
 
-    <a href="{% url 'logout' %}">Logout</a>
+    <script>
+        // Get modal elements
+        const newModal = document.getElementById('openNewModal');
+        const openNewModalLink = document.getElementById('openNewModalLink');
+        const closeNewModal = document.getElementById('closeNewModal');
+    
+        // Ensure modal is hidden on page load
+        window.onload = function() {
+            newModal.style.display = "none";
+        }
+    
+        // Open modal when link is clicked
+        openNewModalLink.onclick = function(event) {
+            event.preventDefault(); // Prevent default anchor behavior
+            newModal.style.display = "flex";
+        }
+    
+        // Close modal when the close button is clicked
+        closeNewModal.onclick = function() {
+            newModal.style.display = "none";
+        }
+    
+        // Close modal when clicking outside the modal content
+        window.onclick = function(event) {
+            if (event.target == newModal) {
+                newModal.style.display = "none";
+            }
+        }
+    </script>
 
     <script>
         document.addEventListener('DOMContentLoaded', function () {

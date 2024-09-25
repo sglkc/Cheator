@@ -135,7 +135,7 @@ def dashboard_view(request):
             else:
                 messages.error(request, 'Password saat ini salah')
 
-    mahasiswa = User.objects.filter(role='mahasiswa', kelas=user.kelas).values('nim', 'nama')
+    mahasiswa = User.objects.filter(role='mahasiswa', kelas=user.kelas).values('nim', 'nama', 'pnaggilan', 'gender')
     classes = Class.objects.filter(name=user.kelas)
     return render(request, 'dashboard.html', {'user': user, 'mahasiswa': mahasiswa, 'classes': classes})
     

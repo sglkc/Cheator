@@ -23,7 +23,8 @@
             </button>
         </div>
     </div>
-
+    <p>Student Name: {{ student_name }}</p>
+    <p>Class Name: {{ class_name }}</p>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const videoCanvas = document.getElementById('videoCanvas');
@@ -69,8 +70,11 @@
 
                             socket.onmessage = (event) => {
                                 proses = false;
-                                processedImage.src = event.data;
+                                const data = JSON.parse(event.data);
+                                processedImage.src = data.image;
                                 processedImage.style.display = 'block';
+    
+                                console.log("Status Kecurangan:", data.status);
                             };
 
                             cameraActive = true;

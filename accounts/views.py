@@ -5,7 +5,8 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.contrib.auth.hashers import make_password, check_password
 import numpy as np
-from .models import User, Class
+from .models import User, Class, CheatDetection
+from django.utils import timezone
 import base64
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
@@ -17,27 +18,21 @@ def process_frame(request):
     if request.method == 'POST':
         data = json.loads(request.body)
         image_data = data.get('image', '')
-
-        # Decode base64 image data
-        image_data = image_data.split(',')[1]  # Remove the 'data:image/jpeg;base64,' prefix
+        image_data = image_data.split(',')[1]
         image_data = base64.b64decode(image_data)
 
-        # Convert binary data to image
         image = Image.open(io.BytesIO(image_data))
         image = np.array(image)
-
-        # Konversi dari RGB ke BGR untuk OpenCV
         image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
+        processed_image, cheat_status = cheat.process_frame(image)
 
-        # Proses gambar dengan cheat.py
-        processed_image = cheat.process_frame(image)
-
-        # Encode hasilnya untuk dikirim balik ke client
         _, buffer = cv2.imencode('.jpg', processed_image)
         encoded_image = base64.b64encode(buffer).decode()
 
-        # Return image as base64 encoded string
-        return JsonResponse({'image': 'data:image/jpeg;base64,' + encoded_image})
+        return JsonResponse({
+            'image': 'data:image/jpeg;base64,' + encoded_image,
+            'status': cheat_status
+        })
     
     return JsonResponse({'error': 'Invalid request method'}, status=400)
 
@@ -74,6 +69,7 @@ def login_view(request):
                 messages.error(request, 'NIP tidak terdaftar')
 
     return render(request, 'login.html')
+
 
 def home_view(request):
     if not request.session.get('is_logged_in') or not request.session.get('user_id'):
@@ -182,30 +178,50 @@ def logout_view(request):
 def join_class_view(request):
     if not request.session.get('is_logged_in') or not request.session.get('user_id'):
         return redirect('login')
-    # Ambil user dari sesi
+
     user_id = request.session.get('user_id')
     try:
         user = User.objects.get(id=user_id)
     except User.DoesNotExist:
         return redirect('login')
 
-    # Cari class berdasarkan kelas user
     student_class = Class.objects.filter(name=user.kelas).first()
 
     if student_class and student_class.status:
-        # Arahkan ke URL meeting yang sesuai dengan kelas
+        # Simpan informasi pengguna dalam sesi
+        request.session['student_name'] = user.pnaggilan
+        request.session['class_name'] = user.kelas
+        print(f"Student Name: {request.session['student_name']}, Class Name: {request.session['class_name']}")
         return redirect(f'/class/room/{student_class.meeting_url}')
     else:
         return redirect('home')
+
+    
+def class_room_view(request, meeting_url):
+    if not request.session.get('is_logged_in') or not request.session.get('user_id'):
+        return redirect('login')
+
+    # Ambil user dari sesi
+    student_name = request.session.get('student_name')
+    class_name = request.session.get('class_name')
+
+    # Temukan kelas berdasarkan meeting_url
+    student_class = Class.objects.filter(meeting_url=meeting_url).first()
+
+    if student_class:
+        context = {
+            'student_name': student_name,
+            'class_name': class_name,
+            'class': student_class,
+        }
+        return render(request, 'class_room.html', context)
+    else:
+        return redirect('home')
+
+
     
 def index_view(request):
     return render(request, 'index.html')
 
 def video_feed_view(request):
     return render(request, 'web.html')
-
-def class_room_view(request, meeting_url):
-    if not request.session.get('is_logged_in') or not request.session.get('user_id'):
-        return redirect('login')
-    # Tampilkan room berdasarkan URL yang dimasukkan
-    return render(request, 'class_room.html', {'meeting_url': meeting_url})

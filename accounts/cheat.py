@@ -68,6 +68,7 @@ def process_frame(frame):
     padding_top = 100  # Padding untuk bagian atas kotak
     box_color = (0, 0, 255)  # Default merah
     text = "Tengok Kanan"  # Default teks
+    cheating = False
 
     # Gambar kotak di sekitar tubuh bagian atas
     if pose_results.pose_landmarks:
@@ -172,6 +173,11 @@ def process_frame(frame):
                 start_time = None
                 tengok_kiri_detected = False
 
+    if text == "Cheating":
+        cheating = True
+    else:
+        cheating = False
+
     # Gambar kotak di sekitar bagian atas tubuh dan tambahkan teks
     cv2.rectangle(image, (min_x, min_y), (max_x, max_y), box_color, 2)
     text_size = cv2.getTextSize(text, cv2.FONT_HERSHEY_SIMPLEX, 0.9, 2)[0]
@@ -179,4 +185,7 @@ def process_frame(frame):
     text_y = min_y + max_y - min_y - 10
     cv2.putText(image, text, (text_x, text_y), cv2.FONT_HERSHEY_SIMPLEX, 0.9, box_color, 2)
 
-    return image
+    if cheating:
+        return image, "cheating"
+    else:
+        return image, "no cheating"

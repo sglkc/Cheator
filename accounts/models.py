@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils import timezone
 
 class User(models.Model):
     nama = models.CharField(max_length=100)
@@ -18,3 +19,12 @@ class Class(models.Model):
 
     def __str__(self):
         return self.name
+    
+class CheatDetection(models.Model):
+    student_name = models.CharField(max_length=100, null=True, blank=True)
+    class_name = models.CharField(max_length=10, null=True, blank=True)
+    screenshot = models.ImageField(upload_to='cheat_screenshots/')
+    date = models.DateTimeField(auto_now_add=True)  # Menyimpan tanggal secara otomatis
+
+    def __str__(self):
+        return f'{self.student_name} - {self.class_name} - {self.date}'

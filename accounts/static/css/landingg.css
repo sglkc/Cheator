@@ -500,105 +500,88 @@ input[type="password"] {
     box-sizing: border-box;
 }
 
+/* Modal Content */
+.modal-content {
+    background-color: #fff;
+    margin: 10% auto;
+    padding: 20px;
+    border-radius: 10px;
+    width: 50%;
+    max-width: 550px;
+    position: relative;
+    overflow: hidden;
+    animation: fadeIn 0.5s ease-in-out;
+    /* Ensure the circle doesn't affect layout */
+}
+
+/* Close Button */
+.close-btn {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.close-btn:hover,
+.close-btn:focus {
+    color: #000;
+    text-decoration: none;
+}
 /* Modal Background */
-.homemodal {
+.modal {
     display: none;
     /* Hidden by default */
     position: fixed;
-    /* Stay in place */
-    z-index: 2000;
-    /* Ensure it's on top */
+    z-index: 200;
     left: 0;
     top: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.7);
-    /* Black background with opacity */
-    transition: opacity 0.5s ease;
-    /* Fade-in effect */
-    opacity: 0;
-    /* Initially transparent */
+    background-color: rgba(0, 0, 0, 0.5);
 }
 
-.homemodal-content {
-    position: absolute;
-    background-color: #fff;
-    margin: auto;
-    padding: 20px;
-    border-radius: 10px;
-    text-align: center;
-    width: 50%;
-    max-width: 600px;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    /* Center the modal */
-    z-index: 2000;
-    opacity: 1;
-}
-
-/* Close button */
-.close-btn {
-    position: absolute;
-    top: 10px;
-    right: 20px;
-    font-size: 28px;
-    cursor: pointer;
-}
-
-/* Modal title and description */
-.homemodal-title {
-    font-size: 24px;
+/* Title and Description */
+.modal-title {
+    padding: 0 3%;
+    font-size: 2.7rem;
+    /* Larger font size for the title */
     margin-bottom: 10px;
 }
 
-.homemodal-description {
+.modal-description {
+    padding: 0 3%;
+    font-size: 2rem;
+    /* Larger font size for the description */
     margin-bottom: 20px;
 }
 
-/* Modal body with image and buttons */
-.homemodal-body {
+/* Flexbox for modal body */
+.modal-body {
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    /* Vertically center the image and buttons */
+    gap: 20px;
+    /* Space between image and buttons */
 }
 
-.homemodal-img {
-    width: 150px;
+/* Image styles */
+.modal-img {
+    max-width: 250px;
+    /* Adjust width as needed */
     height: auto;
-    margin-right: 20px;
 }
 
-/* Buttons */
-.homemodal-buttons {
+/* Flexbox for buttons */
+.modal-buttons {
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
-    height: 100px;
+    /* Stack buttons and text vertically */
+    gap: 10px;
+    /* Space between buttons and text */
+    width: 50%;
 }
 
-.btn {
-    padding: 10px 20px;
-    background-color: #007bff;
-    color: white;
-    text-decoration: none;
-    border: none;
-    cursor: pointer;
-    font-size: 16px;
-    border-radius: 5px;
-}
-
-.btn:hover {
-    background-color: #0056b3;
-}
-
-/* Fade-in effect */
-.homemodal.show {
-    display: block;
-    /* Show modal */
-    opacity: 1;
-    /* Fully visible */
-}
 
 .btn-3 {
     scale: 1;

@@ -147,6 +147,27 @@ header .navbar a:hover {
     /* background-color: #fff7ea; */
 }
 
+.custom-swal-popup {
+    font-size: 1.6rem !important; /* Atur font-size sesuai kebutuhan */
+    overflow: visible !important; /* Hindari pengaruh overflow-x */
+}
+
+.custom-swal-title {
+    font-size: 2rem !important; /* Judul SweetAlert */
+    color: #333; /* Atur warna sesuai kebutuhan */
+}
+
+.custom-swal-content {
+    font-size: 1.6rem !important; /* Konten SweetAlert */
+    color: #666; /* Warna konten */
+}
+
+.custom-swal-button {
+    font-size: 1.4rem !important; /* Tombol konfirmasi */
+    background-color: #3085d6 !important; /* Warna tombol */
+    color: white !important; /* Warna teks tombol */
+}
+
 .abstract-shape {
     position: absolute;
     top: 0;
@@ -498,106 +519,6 @@ input[type="password"] {
     border: 1px solid #ddd;
     border-radius: 5px;
     box-sizing: border-box;
-}
-
-/* Modal Background */
-.homemodal {
-    display: none;
-    /* Hidden by default */
-    position: fixed;
-    /* Stay in place */
-    z-index: 2000;
-    /* Ensure it's on top */
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.7);
-    /* Black background with opacity */
-    transition: opacity 0.5s ease;
-    /* Fade-in effect */
-    opacity: 0;
-    /* Initially transparent */
-}
-
-.homemodal-content {
-    position: absolute;
-    background-color: #fff;
-    margin: auto;
-    padding: 20px;
-    border-radius: 10px;
-    text-align: center;
-    width: 50%;
-    max-width: 600px;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    /* Center the modal */
-    z-index: 2000;
-    opacity: 1;
-}
-
-/* Close button */
-.close-btn {
-    position: absolute;
-    top: 10px;
-    right: 20px;
-    font-size: 28px;
-    cursor: pointer;
-}
-
-/* Modal title and description */
-.homemodal-title {
-    font-size: 24px;
-    margin-bottom: 10px;
-}
-
-.homemodal-description {
-    margin-bottom: 20px;
-}
-
-/* Modal body with image and buttons */
-.homemodal-body {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-}
-
-.homemodal-img {
-    width: 150px;
-    height: auto;
-    margin-right: 20px;
-}
-
-/* Buttons */
-.homemodal-buttons {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    height: 100px;
-}
-
-.btn {
-    padding: 10px 20px;
-    background-color: #007bff;
-    color: white;
-    text-decoration: none;
-    border: none;
-    cursor: pointer;
-    font-size: 16px;
-    border-radius: 5px;
-}
-
-.btn:hover {
-    background-color: #0056b3;
-}
-
-/* Fade-in effect */
-.homemodal.show {
-    display: block;
-    /* Show modal */
-    opacity: 1;
-    /* Fully visible */
 }
 
 .btn-3 {

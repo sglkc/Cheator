@@ -179,4 +179,4 @@ def process_frame(frame):
     text_y = min_y + max_y - min_y - 10
     cv2.putText(image, text, (text_x, text_y), cv2.FONT_HERSHEY_SIMPLEX, 0.9, box_color, 2)
 
-    return image
+    return image, text

@@ -23,8 +23,8 @@
             </button>
         </div>
     </div>
-    <p>Student Name: {{ student_name }}</p>
-    <p>Class Name: {{ class_name }}</p>
+    <p id="studentName" style="display: none;">{{ student_name }}</p>
+    <p id="className" style="display: none;">{{ class_name }}</p>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const videoCanvas = document.getElementById('videoCanvas');
@@ -37,6 +37,8 @@
             let stream = null;
             let cameraActive = false;
             let proses = false;
+            const studentName = document.getElementById('studentName').textContent; // Misalkan ada elemen dengan id studentName
+            const className = document.getElementById('className').textContent; // Misalkan ada elemen dengan id className
 
             function startCamera() {
                 navigator.mediaDevices.getUserMedia({ video: { width: 640, height: 480 } })
@@ -65,8 +67,11 @@
                                     reader.readAsArrayBuffer(blob);
                                 }, 'image/jpeg', 0.3);
                             }
+                            socket.send(studentName);
+                            socket.send(className);
 
                             setInterval(drawFrame, 50);
+
 
                             socket.onmessage = (event) => {
                                 proses = false;

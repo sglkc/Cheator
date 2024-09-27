@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.contrib.auth.hashers import make_password
 from .models import User, Class
-from .models import CheatDetection
+from .models import CheatingEvent
 
 class UserAdmin(admin.ModelAdmin):
     list_display = ('nama', 'nim', 'role', 'gender', 'kelas')
@@ -20,8 +20,8 @@ class ClassAdmin(admin.ModelAdmin):
     list_display = ('name', 'meeting_url', 'status')
     list_editable = ('meeting_url', 'status')
 
-@admin.register(CheatDetection)
+@admin.register(CheatingEvent)
 class CheatDetectionAdmin(admin.ModelAdmin):
-    list_display = ('student_name', 'class_name', 'date', 'screenshot')
+    list_display = ('student_name', 'class_name', 'timestamp', 'cheating_image')
 
 admin.site.register(User, UserAdmin)

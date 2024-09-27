@@ -5,8 +5,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.contrib.auth.hashers import make_password, check_password
 import numpy as np
-from .models import User, Class, CheatDetection
-from django.utils import timezone
+from .models import User, Class
 import base64
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt

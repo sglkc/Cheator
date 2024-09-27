@@ -1,5 +1,7 @@
 from django.urls import path
 from .views import *
+from django.conf import settings
+from django.conf.urls.static import static
 
 urlpatterns = [
     path('', index_view, name='index'),
@@ -13,4 +15,4 @@ urlpatterns = [
     path('class/room/<str:meeting_url>/', class_room_view, name='class_room'),
     path('process_frame/', process_frame, name='process_frame'),
     path('video-feed/', video_feed_view, name='video_feed'),
-]
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

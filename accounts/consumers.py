@@ -4,10 +4,26 @@ import base64
 from channels.generic.websocket import WebsocketConsumer
 from .cheat import process_frame  # Import process_frame dari cheat.py
 import json
+from django.core.files.base import ContentFile  # Untuk menyimpan gambar ke ImageField
+import uuid  # Untuk membuat nama unik pada file gambar
+from django.apps import apps
 
 class VideoConsumer(WebsocketConsumer):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.student_name = None  # Simpan nama siswa
+        self.class_name = None    # Simpan nama kelas
+
     def receive(self, text_data=None, bytes_data=None):
+        # Memuat model CheatingEvent secara dinamis setelah apps sudah siap
+        CheatingEvent = apps.get_model('accounts', 'CheatingEvent')
         try:
+            if text_data:
+                # Simpan studentName atau className tergantung nilai yang diterima
+                if not self.student_name:
+                    self.student_name = text_data.strip()  # Simpan studentName
+                else:
+                    self.class_name = text_data.strip() 
             # Cek apakah `bytes_data` diterima
             if bytes_data:
                 # Mengonversi data byte ke format numpy array
@@ -29,6 +45,19 @@ class VideoConsumer(WebsocketConsumer):
                         'image': 'data:image/jpeg;base64,' + encoded_image,
                         'status': cheat_status  # Status kecurangan yang dikembalikan dari cheat.py
                     }
+
+                    # Jika statusnya "cheating", simpan ke database
+                    if cheat_status == "cheating" and self.student_name:
+                        # Decode image back to raw format to save to database
+                        image_name = f"{uuid.uuid4()}.jpg"
+                        image_data = ContentFile(buffer.tobytes(), image_name)
+
+                        # Simpan event kecurangan ke database
+                        CheatingEvent.objects.create(
+                            student_name=self.student_name,
+                            class_name=self.class_name,
+                            cheating_image=image_data  # Simpan image hasil pemrosesan
+                        )
 
                     # Kirim hasil frame dan status ke client sebagai JSON
                     self.send(text_data=json.dumps(response))

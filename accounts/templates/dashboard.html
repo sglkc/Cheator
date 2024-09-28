@@ -12,7 +12,93 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
     <style>
-    </style>
+    /* Modal Styling */
+    .studentmodel {
+        display: none;
+        position: fixed;
+        z-index: 1000;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.7);
+    }
+    
+    .studentmodel-content {
+        background-color: #fefefe;
+        margin: auto; /* Ubah margin menjadi auto untuk memusatkan modal */
+        padding: 20px;
+        border-radius: 8px;
+        width: 60%;
+        max-width: 700px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        max-height: 80%; /* Limit the modal height to allow scrolling */
+        position: relative; /* Tambahkan posisi relatif untuk penyesuaian */
+        top: 50%; /* Geser ke tengah vertikal */
+        transform: translateY(-50%); /* Geser modal ke atas setengah dari tinggi modal untuk memusatkan */
+    }
+    
+    .studentmodel-close {
+        color: #aaa;
+        float: right;
+        font-size: 28px;
+        font-weight: bold;
+        cursor: pointer;
+    }
+    
+    .studentmodel-close:hover,
+    .studentmodel-close:focus {
+        color: #000;
+    }
+    
+    .studentmodel-header {
+        font-size: 2rem; /* Ukuran header 2rem */
+        font-weight: bold;
+        margin-bottom: 10px;
+        text-align: center; /* Pusatkan teks dalam header */
+    }
+    
+    .studentmodel-class {
+        font-size: 18px;
+        color: #555;
+    }
+    
+    .studentmodel-body {
+        margin-top: 20px;
+        overflow-y: auto; /* Ensure scrolling inside the modal body */
+        max-height: 60vh; /* Set a maximum height for scroll area */
+    }
+    
+    .studentmodel-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+        margin-bottom: 50px;
+        margin-left: -20px;
+    }
+    
+    .studentmodel-table th, .studentmodel-table td {
+        padding: 12px;
+        text-align: left;
+        border-bottom: 1px solid #ddd;
+    }
+    
+    .studentmodel-table th {
+        background-color: #f2f2f2;
+        font-weight: bold;
+    }
+    
+    .studentmodel-table-image {
+        max-width: 300px;
+        height: auto;
+        border-radius: 4px;
+        transition: transform 0.2s;
+    }
+    
+    .studentmodel-table-image:hover {
+        transform: scale(1.2);
+    }
+</style>
 </head>
 <body>
     <header>
@@ -93,7 +179,7 @@
         <div class="row">
         {% for mhs in mahasiswa_list %}
             <div class="column" data-aos="flip-right" data-aos-duration="5000">
-                <div class="card" onclick="openModal('{{ mhs.pnaggilan }}', '{{ user.kelas }}', '{{ mhs.cheating_image_urls|default_if_none:'' }}')">
+                <div class="card" onclick="openModal('{{ mhs.pnaggilan }}', '{{ user.kelas }}', '{{ mhs.cheating_image_urls|default_if_none:'' }}', '{{ mhs.cheating_timestamps|default_if_none:'' }}')">
                     <div class="img-container">
                         {% if mhs.gender == "P" %}
                             <img src="{% static 'asset/img/cowo.svg' %}" alt="cowo" />
@@ -103,7 +189,7 @@
                             <img src="{% static 'asset/img/default.svg' %}" alt="default image" />
                         {% endif %}
                     </div>
-                    <h3>{{ mhs.pnaggilan }}</h3>
+                    <h3>{{ mhs.pnaggilan }} ({{ mhs.jumlah_foto }} foto) </h3>
                 </div>
             </div>
         {% empty %}
@@ -112,17 +198,17 @@
         </div>
     </section>
     
-    <!-- Modal Structure -->
-    <div id="studentModal" class="modal">
-        <div class="modal-content">
-            <span class="close" onclick="closeModal()">&times;</span>
-            <h2 id="modalName"></h2>
-            <p id="modalClass"></p>
-            <table class="modal-table">
+<!-- Modal Structure -->
+<div id="studentModal" class="studentmodel">
+    <div class="studentmodel-content">
+        <span class="studentmodel-close" onclick="closeModal()">&times;</span>
+        <h2 id="modalName" class="studentmodel-title"></h2>
+        <p id="modalClass" class="studentmodel-class"></p>
+        <div class="studentmodel-body">
+            <table class="studentmodel-table">
                 <thead>
                     <tr>
-                        <th>No.</th>
-                        <th>Gambar Kecurangan</th>
+
                     </tr>
                 </thead>
                 <tbody id="modalImageTableBody">
@@ -131,6 +217,7 @@
             </table>
         </div>
     </div>
+</div>
 
 
     <div id="openNewModal" class="newmodal" style="display: none;">
@@ -154,46 +241,70 @@
     </div>
 
     <script>
-        function openModal(name, kelas, imageUrls) {
+        function openModal(name, kelas, imageUrls, timestamps) {
             document.getElementById('modalName').innerText = 'Nama: ' + name;
             document.getElementById('modalClass').innerText = 'Kelas: ' + kelas;
-        
-            // Parsing the image URLs (comma-separated string) into an array
+    
+            // Split images and timestamps
             var imageArray = imageUrls.split(',');
-            
+            var timestampArray = timestamps.split(',');
+    
             var tableBody = document.getElementById('modalImageTableBody');
             tableBody.innerHTML = ''; // Clear any existing table rows
-        
-            // Create table rows for each image
+    
+            // Create a single row for images
+            var rowImages = document.createElement('tr');
+            var cellImagesLabel = document.createElement('td');
+            cellImagesLabel.colSpan = 2; // Merge cells for image label
+            rowImages.appendChild(cellImagesLabel);
+    
+            // Create a single row for timestamps
+            var rowTimestamps = document.createElement('tr');
+            var cellTimestampsLabel = document.createElement('td');
+            cellTimestampsLabel.colSpan = 2; // Merge cells for timestamp label
+            rowTimestamps.appendChild(cellTimestampsLabel);
+    
+            // Loop over the images and timestamps to populate the rows
             imageArray.forEach(function(imageUrl, index) {
                 if (imageUrl.trim() !== '') {
-                    var row = document.createElement('tr');
-                    
-                    var cellIndex = document.createElement('td');
-                    cellIndex.innerText = index + 1;
-        
+                    // Create image cell
                     var cellImage = document.createElement('td');
                     var img = document.createElement('img');
                     img.src = imageUrl.trim();
-                    img.className = 'modal-table-image';
+                    img.className = 'studentmodel-table-image'; // Ensure the class matches your CSS
                     img.alt = 'Bukti Kecurangan';
                     cellImage.appendChild(img);
-        
-                    row.appendChild(cellIndex);
-                    row.appendChild(cellImage);
-        
-                    tableBody.appendChild(row);
+                    rowImages.appendChild(cellImage);
+    
+                    // Create timestamp cell
+                    var cellTimestamp = document.createElement('td');
+                    cellTimestamp.innerText = timestampArray[index] ? timestampArray[index].trim() : 'N/A';
+                    rowTimestamps.appendChild(cellTimestamp);
                 }
             });
-        
-            document.getElementById('studentModal').style.display = 'block'; // Show the modal
+    
+            // Append the rows to the table body
+            tableBody.appendChild(rowImages);
+            tableBody.appendChild(rowTimestamps);
+    
+            var modal = document.getElementById('studentModal');
+            modal.style.display = 'block'; // Show the modal
+    
+            // Close modal when clicking outside of the modal content
+            modal.addEventListener('click', function(event) {
+                if (event.target === modal) { // Check if the click was outside the modal content
+                    closeModal(); // Call the closeModal function
+                }
+            });
         }
-        
+    
         function closeModal() {
             document.getElementById('studentModal').style.display = 'none'; // Hide the modal
-        }        
+        }
     </script>
-
+    
+    
+    
     <script>
         // Get modal elements
         const newModal = document.getElementById('openNewModal');

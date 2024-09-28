@@ -165,16 +165,20 @@ def dashboard_view(request):
     # Retrieve CheatingEvents related to the mahasiswa
     cheating_events = CheatingEvent.objects.filter(student_name__in=[mhs['pnaggilan'] for mhs in mahasiswa])
 
-    # Create a dictionary to store images for each mahasiswa
+    # Create a dictionary to store images and timestamps for each mahasiswa
     cheating_dict = {}
     for event in cheating_events:
         if event.student_name not in cheating_dict:
-            cheating_dict[event.student_name] = []
-        cheating_dict[event.student_name].append(event.cheating_image.url)
+            cheating_dict[event.student_name] = {'images': [], 'timestamps': []}
+        cheating_dict[event.student_name]['images'].append(event.cheating_image.url)
+        cheating_dict[event.student_name]['timestamps'].append(event.timestamp.strftime('%Y-%m-%d %H:%M:%S'))  # Format timestamp
 
-    # Add cheating images URLs to mahasiswa data
+    # Add cheating images URLs and timestamps to mahasiswa data
     for mhs in mahasiswa:
-        mhs['cheating_image_urls'] = ','.join(cheating_dict.get(mhs['pnaggilan'], []))
+        cheating_info = cheating_dict.get(mhs['pnaggilan'], {'images': [], 'timestamps': []})
+        mhs['cheating_image_urls'] = ','.join(cheating_info['images'])
+        mhs['cheating_timestamps'] = ','.join(cheating_info['timestamps'])
+        mhs['jumlah_foto'] = len(cheating_info['images'])
 
     classes = Class.objects.filter(name=user.kelas)
     
@@ -184,6 +188,7 @@ def dashboard_view(request):
         'classes': classes,
         'cheating_dict': cheating_dict,  # Optional: if you need it for other purposes
     })
+
 
 def open_class_view(request, class_id):
     user_id = request.session.get('user_id')

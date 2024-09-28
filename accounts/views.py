@@ -9,7 +9,7 @@ from .models import User, Class,  CheatingEvent
 import base64
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
-from. import cheat  # Pastikan file cheat.py diimport
+from. import cheat, yawn  # Pastikan file cheat.py diimport
 from PIL import Image
 
 @csrf_exempt
@@ -24,6 +24,29 @@ def process_frame(request):
         image = np.array(image)
         image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
         processed_image, cheat_status = cheat.process_frame(image)
+
+        _, buffer = cv2.imencode('.jpg', processed_image)
+        encoded_image = base64.b64encode(buffer).decode()
+
+        return JsonResponse({
+            'image': 'data:image/jpeg;base64,' + encoded_image,
+            'status': cheat_status
+        })
+    
+    return JsonResponse({'error': 'Invalid request method'}, status=400)
+
+@csrf_exempt
+def detect_yawn(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        image_data = data.get('image', '')
+        image_data = image_data.split(',')[1]
+        image_data = base64.b64decode(image_data)
+
+        image = Image.open(io.BytesIO(image_data))
+        image = np.array(image)
+        image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
+        processed_image, cheat_status = yawn.detect_yawn(image)
 
         _, buffer = cv2.imencode('.jpg', processed_image)
         encoded_image = base64.b64encode(buffer).decode()

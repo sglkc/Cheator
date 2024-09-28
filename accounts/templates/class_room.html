@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Offline</title>
+    <title>Online</title>
     {% load static %}
     <link rel="stylesheet" href="{% static 'css/web.css' %}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
@@ -67,6 +67,7 @@
                                     reader.readAsArrayBuffer(blob);
                                 }, 'image/jpeg', 0.3);
                             }
+                            socket.send("online");
                             socket.send(studentName);
                             socket.send(className);
 

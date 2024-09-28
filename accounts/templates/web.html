@@ -23,7 +23,6 @@
             </button>
         </div>
     </div>
-
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const videoCanvas = document.getElementById('videoCanvas');
@@ -62,15 +61,21 @@
                                         proses = true;
                                     };
                                     reader.readAsArrayBuffer(blob);
-                                }, 'image/jpeg', 0.5);
+                                }, 'image/jpeg', 0.3);
                             }
 
-                            setInterval(drawFrame, 25);
+                            setInterval(drawFrame, 50);
+                            socket.send('offline');
+                            socket.send('offline');
+                            socket.send('offline');
 
                             socket.onmessage = (event) => {
                                 proses = false;
-                                processedImage.src = event.data;
+                                const data = JSON.parse(event.data);
+                                processedImage.src = data.image;
                                 processedImage.style.display = 'block';
+    
+                                console.log("Status Kecurangan:", data.status);
                             };
 
                             cameraActive = true;
@@ -95,7 +100,7 @@
                     toggleIcon.textContent = 'videocam_off';
                     setTimeout(() => {
                         location.reload();
-                    }, 500);
+                    }, 200);
                 }
             }
 

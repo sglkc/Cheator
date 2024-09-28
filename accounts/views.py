@@ -5,7 +5,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.contrib.auth.hashers import make_password, check_password
 import numpy as np
-from .models import User, Class
+from .models import User, Class,  CheatingEvent
 import base64
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
@@ -107,15 +107,21 @@ def home_view(request):
     }
     return render(request, 'home.html', context)
 
+from django.shortcuts import render, redirect
+from django.contrib import messages
+from django.contrib.auth.hashers import check_password, make_password
+from .models import User, Class, CheatingEvent
+
 def dashboard_view(request):
     if not request.session.get('is_logged_in') or not request.session.get('user_id'):
         return redirect('login')
-    
+
     user_id = request.session.get('user_id')
     user = User.objects.get(id=user_id)
-    
+
     if user.role != 'dosen':
         return redirect('login')
+
     if request.method == 'POST':
         if 'change_password' in request.POST:
             old_password = request.POST.get('old_password')
@@ -130,10 +136,31 @@ def dashboard_view(request):
             else:
                 messages.error(request, 'Password saat ini salah')
 
+    # Retrieve mahasiswa based on the kelas of the logged-in user
     mahasiswa = User.objects.filter(role='mahasiswa', kelas=user.kelas).values('nim', 'nama', 'pnaggilan', 'gender')
+
+    # Retrieve CheatingEvents related to the mahasiswa
+    cheating_events = CheatingEvent.objects.filter(student_name__in=[mhs['pnaggilan'] for mhs in mahasiswa])
+
+    # Create a dictionary to store images for each mahasiswa
+    cheating_dict = {}
+    for event in cheating_events:
+        if event.student_name not in cheating_dict:
+            cheating_dict[event.student_name] = []
+        cheating_dict[event.student_name].append(event.cheating_image.url)
+
+    # Add cheating images URLs to mahasiswa data
+    for mhs in mahasiswa:
+        mhs['cheating_image_urls'] = ','.join(cheating_dict.get(mhs['pnaggilan'], []))
+
     classes = Class.objects.filter(name=user.kelas)
-    return render(request, 'dashboard.html', {'user': user, 'mahasiswa': mahasiswa, 'classes': classes})
     
+    return render(request, 'dashboard.html', {
+        'user': user,
+        'mahasiswa_list': mahasiswa,
+        'classes': classes,
+        'cheating_dict': cheating_dict,  # Optional: if you need it for other purposes
+    })
 
 def open_class_view(request, class_id):
     user_id = request.session.get('user_id')

@@ -91,9 +91,9 @@
     <section class="contact" id="contact" data-aos="fade-up" data-aos-duration="1000">
         <h1 class="heading" data-aos="fade-up" data-aos-duration="1000"> <span> Mahasiswa</span> {{ user.kelas }} </h1>
         <div class="row">
-            {% for mhs in mahasiswa %}
+        {% for mhs in mahasiswa_list %}
             <div class="column" data-aos="flip-right" data-aos-duration="5000">
-                <div class="card">
+                <div class="card" onclick="openModal('{{ mhs.pnaggilan }}', '{{ user.kelas }}', '{{ mhs.cheating_image_urls|default_if_none:'' }}')">
                     <div class="img-container">
                         {% if mhs.gender == "P" %}
                             <img src="{% static 'asset/img/cowo.svg' %}" alt="cowo" />
@@ -111,6 +111,27 @@
         {% endfor %}
         </div>
     </section>
+    
+    <!-- Modal Structure -->
+    <div id="studentModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <h2 id="modalName"></h2>
+            <p id="modalClass"></p>
+            <table class="modal-table">
+                <thead>
+                    <tr>
+                        <th>No.</th>
+                        <th>Gambar Kecurangan</th>
+                    </tr>
+                </thead>
+                <tbody id="modalImageTableBody">
+                    <!-- Dynamic rows will be appended here by JavaScript -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
 
     <div id="openNewModal" class="newmodal" style="display: none;">
         <div class="newmodal-content">
@@ -131,6 +152,47 @@
             </form>
         </div>
     </div>
+
+    <script>
+        function openModal(name, kelas, imageUrls) {
+            document.getElementById('modalName').innerText = 'Nama: ' + name;
+            document.getElementById('modalClass').innerText = 'Kelas: ' + kelas;
+        
+            // Parsing the image URLs (comma-separated string) into an array
+            var imageArray = imageUrls.split(',');
+            
+            var tableBody = document.getElementById('modalImageTableBody');
+            tableBody.innerHTML = ''; // Clear any existing table rows
+        
+            // Create table rows for each image
+            imageArray.forEach(function(imageUrl, index) {
+                if (imageUrl.trim() !== '') {
+                    var row = document.createElement('tr');
+                    
+                    var cellIndex = document.createElement('td');
+                    cellIndex.innerText = index + 1;
+        
+                    var cellImage = document.createElement('td');
+                    var img = document.createElement('img');
+                    img.src = imageUrl.trim();
+                    img.className = 'modal-table-image';
+                    img.alt = 'Bukti Kecurangan';
+                    cellImage.appendChild(img);
+        
+                    row.appendChild(cellIndex);
+                    row.appendChild(cellImage);
+        
+                    tableBody.appendChild(row);
+                }
+            });
+        
+            document.getElementById('studentModal').style.display = 'block'; // Show the modal
+        }
+        
+        function closeModal() {
+            document.getElementById('studentModal').style.display = 'none'; // Hide the modal
+        }        
+    </script>
 
     <script>
         // Get modal elements

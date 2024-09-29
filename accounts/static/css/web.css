@@ -13,7 +13,7 @@ body {
     background-color: #202124;
     margin: 0;
     font-family: Arial, sans-serif;
-    color: white;
+    color: black;
 }
 
 .container {
@@ -33,12 +33,12 @@ canvas {
     display: none;
 }
 
-img {
+.imgcanvas {
     width: 100%;
     height: 100%;
     object-fit: cover;
     display: none;
-}
+} 
 
 .controls {
     position: absolute;

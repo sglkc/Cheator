@@ -109,6 +109,9 @@ def home_view(request):
     if user.role != 'mahasiswa':
         return redirect('login')
     
+    dosen = User.objects.filter(role='dosen', kelas=user.kelas).first()
+    nama_dosen = dosen.nama if dosen else None
+    
     if request.method == 'POST':
         if 'change_password' in request.POST:
             old_password = request.POST.get('old_password')
@@ -126,14 +129,10 @@ def home_view(request):
     context = {
         'user': user,
         'meeting_url': student_class.meeting_url if student_class and student_class.status else None,
-        'error': 'Class is not open yet' if student_class and not student_class.status else None
+        'error': 'Class is not open yet' if student_class and not student_class.status else None,
+        'nama_dosen': nama_dosen  # Tambahkan nama dosen ke konteks
     }
     return render(request, 'home.html', context)
-
-from django.shortcuts import render, redirect
-from django.contrib import messages
-from django.contrib.auth.hashers import check_password, make_password
-from .models import User, Class, CheatingEvent
 
 def dashboard_view(request):
     if not request.session.get('is_logged_in') or not request.session.get('user_id'):
@@ -161,6 +160,7 @@ def dashboard_view(request):
 
     # Retrieve mahasiswa based on the kelas of the logged-in user
     mahasiswa = User.objects.filter(role='mahasiswa', kelas=user.kelas).values('nim', 'nama', 'pnaggilan', 'gender')
+    jumlah_mahasiswa = mahasiswa.count()
 
     # Retrieve CheatingEvents related to the mahasiswa
     cheating_events = CheatingEvent.objects.filter(student_name__in=[mhs['pnaggilan'] for mhs in mahasiswa])
@@ -187,6 +187,7 @@ def dashboard_view(request):
         'mahasiswa_list': mahasiswa,
         'classes': classes,
         'cheating_dict': cheating_dict,  # Optional: if you need it for other purposes
+        'jumlah_mahasiswa': jumlah_mahasiswa, 
     })
 
 
@@ -278,7 +279,36 @@ def index_view(request):
     return render(request, 'index.html')
 
 def video_feed_view(request):
-    return render(request, 'web.html')
+    # Retrieve CheatingEvents where student_name is "offline"
+    cheating_events = CheatingEvent.objects.filter(student_name="offline")
+
+    # Initialize a dictionary to hold the images and timestamps
+    cheating_dict = {}
+
+    for event in cheating_events:
+        if event.student_name not in cheating_dict:
+            cheating_dict[event.student_name] = {'images': [], 'timestamps': []}
+        cheating_dict[event.student_name]['images'].append(event.cheating_image.url)
+        cheating_dict[event.student_name]['timestamps'].append(event.timestamp.strftime('%Y-%m-%d %H:%M:%S'))  # Format timestamp
+
+    # Create a list to hold the results to return to the template
+    cheating_list = []
+    for student_name, info in cheating_dict.items():
+        cheating_list.append({
+            'student_name': student_name,
+            'cheating_image_urls': info['images'],
+            'cheating_timestamps': info['timestamps'],
+            'jumlah_foto': len(info['images']),
+        })
+
+    print(f"Jumlah foto for student_name 'offline': {cheating_list[0]['jumlah_foto']}") if cheating_list else print("No cheating events found for 'offline'.")
+
+    # Return the response
+    return render(request, 'web.html', {
+        'cheating_list': cheating_list,  # Pass the cheating data to the template
+    })
+
+
 
 def custom_404(request, exception):
     return render(request, '404.html', status=404)

@@ -98,6 +98,16 @@ class VideoConsumer(WebsocketConsumer):
                 'status': yawn_status
             }
 
+            if yawn_status == "Menguap" and self.student_name and self.class_name:
+                image_name = f"{uuid.uuid4()}.jpg"
+                image_data = ContentFile(buffer.tobytes(), image_name)
+
+                CheatingEvent.objects.create(
+                    student_name=self.student_name,
+                    class_name=self.class_name,
+                    cheating_image=image_data
+                )
+
             # Kirim hasil frame dan status ke client dalam format JSON
             self.send(text_data=json.dumps(response))
         else:

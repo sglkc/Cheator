@@ -98,13 +98,94 @@
     .studentmodel-table-image:hover {
         transform: scale(1.2);
     }
+
+/* Modal Background */
+.profilemodal {
+    display: none; /* Modal tidak ditampilkan secara default */
+    position: fixed; /* Posisi tetap di layar */
+    z-index: 500; /* Mengatur lapisan agar modal di atas konten lain */
+    left: 0;
+    top: 0;
+    width: 100%; /* Lebar penuh */
+    height: 100%; /* Tinggi penuh */
+    background-color: rgba(0, 0, 0, 0.4); /* Latar belakang semi-transparan */
+    display: flex; /* Menggunakan Flexbox untuk penataan */
+    justify-content: center; /* Menyusun konten modal secara horizontal di tengah */
+    align-items: center; /* Menyusun konten modal secara vertikal di tengah */
+}
+
+/* Modal Content */
+.profilemodal-content {
+    background-color: #fefefe; /* Latar belakang modal */
+    padding: 20px; /* Ruang di dalam modal */
+    border: 1px solid #888; /* Garis batas modal */
+    width: 50%; /* Lebar modal */
+    max-width: 400px; /* Lebar maksimum modal */
+    border-radius: 10px; /* Sudut melengkung */
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+/* Close Button */
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+/* Close Button Hover */
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+/* Body of the modal */
+.profilemodal-body {
+    text-align: center; /* Center title */
+}
+
+/* Profile Image Container */
+.img-container {
+    width: 20em; /* Increased size */
+    height: 20em; /* Increased size */
+    background-color: #a993ff;
+    padding: 0.5em;
+    padding-top: 5rem;
+    border-radius: 50%;
+    margin: 0 auto 2em auto;
+}
+
+/* Profile Image */
+.img-container img {
+    width: 20em; /* Increased size */
+    height: 20em; /* Increased size */
+    border-radius: 50%;
+    margin: -5rem;
+}
+
+/* Title */
+.profilemodal-title {
+    font-size: 1.8em;
+    margin-bottom: 10px;
+    text-align: center; /* Center title */
+}
+
+/* Profile Info */
+.profile-info p {
+    font-size: 1.2em;
+    margin: 10px 0;
+    text-align: left; /* Align text to the left */
+}
+
 </style>
 </head>
 <body>
     <header>
         <a href='web' class="logo">Dashboard <span>.</span></a>
         <nav class="navbar">
-            <a href="#" id="openNewModalLink">Profile</a>
+            <a href="#opemodal" id="openProfileLink">Profile</a>
             <a href="{% url 'logout' %}">Logout</a>
         </nav>
     </header>
@@ -220,6 +301,31 @@
 </div>
 
 
+
+<div id="profileModal" class="profilemodal" style="display: none;">
+    <div class="profilemodal-content">
+        <div class="profilemodal-body">
+            <div class="img-container">
+            {% if user.gender == 'P' %}
+                <img src="{% static 'asset/img/cowo.svg' %}" alt="Profile P" />
+            {% elif user.gender == 'W' %}
+                <img src="{% static 'asset/img/cewe.svg' %}" alt="Profile W" />
+            {% else %}
+                <img src="{% static 'asset/img/default.svg' %}" alt="default image" />
+            {% endif %}</h3>
+            </div>
+            <h2 class="profilemodal-title">{{ user.nama }}</h2>
+            <div class="profile-info">
+                <p><strong>Kelas:</strong> {{ user.kelas }}</p>
+                <p><strong>NIP:</strong> {{ user.nip }}</p>
+                <p><strong>Jumlah Siswa:</strong> {{ jumlah_mahasiswa }}</p>
+                <button id="openModalBtn" class="btn">Change Password</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
     <div id="openNewModal" class="newmodal" style="display: none;">
         <div class="newmodal-content">
             <span class="close" id="closeNewModal">&times;</span>
@@ -235,7 +341,7 @@
                     <label for="new_password">Password Baru:</label>
                     <input type="password" name="new_password" id="new_password" required />
                 </div>
-                <button type="submit" name="change_password">Change Password</button>
+                <button type="submit" name="change_password" class="btn">Confirm</button>
             </form>
         </div>
     </div>
@@ -248,6 +354,7 @@
             // Split images and timestamps
             var imageArray = imageUrls.split(',');
             var timestampArray = timestamps.split(',');
+            console.log(imageUrls)
     
             var tableBody = document.getElementById('modalImageTableBody');
             tableBody.innerHTML = ''; // Clear any existing table rows
@@ -308,32 +415,45 @@
     <script>
         // Get modal elements
         const newModal = document.getElementById('openNewModal');
-        const openNewModalLink = document.getElementById('openNewModalLink');
+        const openNewModalLink = document.getElementById('openModalBtn');
         const closeNewModal = document.getElementById('closeNewModal');
+        
+        // Get other modal elements (misalnya modal lain yang ingin ditutup)
+        const otherModal = document.getElementById('profileModal'); // Ganti dengan ID modal lain Anda
     
         // Ensure modal is hidden on page load
         window.onload = function() {
             newModal.style.display = "none";
+            if (otherModal) {
+                otherModal.style.display = "none"; // Pastikan modal lain juga tersembunyi
+            }
         }
     
-        // Open modal when link is clicked
+        // Open new modal when link is clicked
         openNewModalLink.onclick = function(event) {
             event.preventDefault(); // Prevent default anchor behavior
-            newModal.style.display = "flex";
+    
+            // Close the other modal if it's open
+            if (otherModal && otherModal.style.display === "flex") {
+                otherModal.style.display = "none";
+            }
+    
+            newModal.style.display = "flex"; // Show new modal
         }
     
-        // Close modal when the close button is clicked
+        // Close new modal when the close button is clicked
         closeNewModal.onclick = function() {
             newModal.style.display = "none";
         }
     
-        // Close modal when clicking outside the modal content
+        // Close new modal when clicking outside the modal content
         window.onclick = function(event) {
-            if (event.target == newModal) {
+            if (event.target == newModal) { // Periksa dengan newModal
                 newModal.style.display = "none";
             }
         }
     </script>
+    
 
     <script>
         AOS.init();
@@ -372,6 +492,26 @@
                 {% endfor %}
             {% endif %}
         });
+    </script>
+
+    <script>
+// Get modal element
+var modal = document.getElementById('profileModal');
+
+// Get the link that opens the modal
+var link = document.getElementById('openProfileLink');
+
+// When the user clicks on the link, open the modal
+link.onclick = function() {
+    modal.style.display = "flex"; // Pastikan menggunakan 'flex'
+}
+// When the user clicks anywhere outside of the modal, close it
+window.onclick = function(event) {
+    if (event.target == modal) {
+        modal.style.display = "none";
+    }
+}
+
     </script>
 </body>
 </html>

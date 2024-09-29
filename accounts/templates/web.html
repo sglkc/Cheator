@@ -9,20 +9,133 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
     <script src="https://cdn.socket.io/4.0.0/socket.io.min.js"></script>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <style>
+    /* Modal Styling */
+    .studentmodel {
+        display: none;
+        position: fixed;
+        z-index: 1000;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.7);
+    }
+    
+    .studentmodel-content {
+        background-color: #fefefe;
+        margin: auto; /* Ubah margin menjadi auto untuk memusatkan modal */
+        padding: 20px;
+        border-radius: 8px;
+        width: 60%;
+        max-width: 700px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        max-height: 80%; /* Limit the modal height to allow scrolling */
+        position: relative; /* Tambahkan posisi relatif untuk penyesuaian */
+        top: 50%; /* Geser ke tengah vertikal */
+        transform: translateY(-50%); /* Geser modal ke atas setengah dari tinggi modal untuk memusatkan */
+    }
+    
+    .studentmodel-close {
+        color: #aaa;
+        float: right;
+        font-size: 28px;
+        font-weight: bold;
+        cursor: pointer;
+    }
+    
+    .studentmodel-close:hover,
+    .studentmodel-close:focus {
+        color: #000;
+    }
+    
+    .studentmodel-header {
+        font-size: 2rem; /* Ukuran header 2rem */
+        font-weight: bold;
+        margin-bottom: 10px;
+        text-align: center; /* Pusatkan teks dalam header */
+    }
+    
+    .studentmodel-class {
+        font-size: 18px;
+        color: #555;
+    }
+    
+    .studentmodel-body {
+        margin-top: 20px;
+        overflow-y: auto; /* Ensure scrolling inside the modal body */
+        max-height: 60vh; /* Set a maximum height for scroll area */
+    }
+    
+    .studentmodel-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+        margin-bottom: 50px;
+        margin-left: -20px;
+    }
+    
+    .studentmodel-table th, .studentmodel-table td {
+        padding: 12px;
+        text-align: left;
+        border-bottom: 1px solid #ddd;
+    }
+    
+    .studentmodel-table th {
+        background-color: #f2f2f2;
+        font-weight: bold;
+    }
+    
+    .studentmodel-table-image {
+        max-width: 320px;
+        height: auto;
+        border-radius: 4px;
+        transition: transform 0.2s;
+    }
+    
+    .studentmodel-table-image:hover {
+        transform: scale(1.2);
+    }
+    </style>
 </head>
 <body>
     <div class="container">
         <canvas id="videoCanvas"></canvas>
-        <img id="processedImage" alt="Processed video feed">
+        <img class="imgcanvas" id="processedImage" alt="Processed video feed">
         <div>
-            <a href="/" class="logo">Cheator <span>.</span></a>
+            <a href="/" class="logo">Monitor <span>.</span></a>
         </div>
         <div class="controls">
             <button class="control-button" id="toggleButton">
                 <span class="material-icons" id="toggleIcon">videocam_off</span>
             </button>
+            <button class="control-button active" id="folderButton" onclick="openModal('Offline', '{{cheating_list.0.jumlah_foto}}', '{{ cheating_list.0.cheating_image_urls|join:"," }}', '{{ cheating_list.0.cheating_timestamps|join:"," }}')">
+                <span class="material-icons">folder</span>
+            </button>
         </div>
     </div>
+
+<!-- Modal Structure -->
+<div id="studentModal" class="studentmodel">
+    <div class="studentmodel-content">
+        <span class="studentmodel-close" onclick="closeModal()">&times;</span>
+        <h2 id="modalName" class="studentmodel-title"></h2>
+        <p id="modalClass" class="studentmodel-class"></p>
+        <div class="studentmodel-body">
+            <table class="studentmodel-table">
+                <thead>
+                    <tr>
+
+                    </tr>
+                </thead>
+                <tbody id="modalImageTableBody">
+                    <!-- Dynamic rows will be appended here by JavaScript -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const videoCanvas = document.getElementById('videoCanvas');
@@ -112,6 +225,69 @@
                 }
             });
         });
+    </script>
+
+    <script>
+        function openModal(name, jumlah, imageUrls, timestamps) {
+            document.getElementById('modalName').innerText = 'Mode: ' + name;
+            document.getElementById('modalClass').innerText = 'Tangkapan Hari Ini: ' + jumlah;
+    
+            // Split images and timestamps
+            var imageArray = imageUrls.split(',');
+            var timestampArray = timestamps.split(',');
+    
+            var tableBody = document.getElementById('modalImageTableBody');
+            tableBody.innerHTML = ''; // Clear any existing table rows
+    
+            // Create a single row for images
+            var rowImages = document.createElement('tr');
+            var cellImagesLabel = document.createElement('td');
+            cellImagesLabel.colSpan = 2; // Merge cells for image label
+            rowImages.appendChild(cellImagesLabel);
+    
+            // Create a single row for timestamps
+            var rowTimestamps = document.createElement('tr');
+            var cellTimestampsLabel = document.createElement('td');
+            cellTimestampsLabel.colSpan = 2; // Merge cells for timestamp label
+            rowTimestamps.appendChild(cellTimestampsLabel);
+    
+            // Loop over the images and timestamps to populate the rows
+            imageArray.forEach(function(imageUrl, index) {
+                if (imageUrl.trim() !== '') {
+                    // Create image cell
+                    var cellImage = document.createElement('td');
+                    var img = document.createElement('img');
+                    img.src = imageUrl.trim();
+                    img.className = 'studentmodel-table-image'; // Ensure the class matches your CSS
+                    img.alt = 'Bukti Kecurangan';
+                    cellImage.appendChild(img);
+                    rowImages.appendChild(cellImage);
+    
+                    // Create timestamp cell
+                    var cellTimestamp = document.createElement('td');
+                    cellTimestamp.innerText = timestampArray[index] ? timestampArray[index].trim() : 'N/A';
+                    rowTimestamps.appendChild(cellTimestamp);
+                }
+            });
+    
+            // Append the rows to the table body
+            tableBody.appendChild(rowImages);
+            tableBody.appendChild(rowTimestamps);
+    
+            var modal = document.getElementById('studentModal');
+            modal.style.display = 'block'; // Show the modal
+    
+            // Close modal when clicking outside of the modal content
+            modal.addEventListener('click', function(event) {
+                if (event.target === modal) { // Check if the click was outside the modal content
+                    closeModal(); // Call the closeModal function
+                }
+            });
+        }
+    
+        function closeModal() {
+            document.getElementById('studentModal').style.display = 'none'; // Hide the modal
+        }
     </script>
 </body>
 </html>

@@ -24,9 +24,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-d6j(l!e2zz#xc5bp_p%&ad=e7j0tcv&t_pnwsd(d6*0a!t!&o$'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['localhost', '127.0.0.1']
 
 
 # Application definition
@@ -129,7 +129,7 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 STATICFILES_DIRS = [
-    BASE_DIR / "static",  # Path ke direktori tempat menyimpan file statis
+    BASE_DIR / 'static',
 ]
 
 STATIC_ROOT = BASE_DIR / "staticfiles"

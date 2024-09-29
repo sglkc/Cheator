@@ -16,3 +16,6 @@ urlpatterns = [
     path('process_frame/', process_frame, name='process_frame'),
     path('video-feed/', video_feed_view, name='video_feed'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+from django.conf.urls import handler404
+handler404 = 'accounts.views.custom_404'

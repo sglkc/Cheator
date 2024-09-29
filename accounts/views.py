@@ -279,3 +279,6 @@ def index_view(request):
 
 def video_feed_view(request):
     return render(request, 'web.html')
+
+def custom_404(request, exception):
+    return render(request, '404.html', status=404)

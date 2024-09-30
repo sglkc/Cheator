@@ -67,7 +67,7 @@ class VideoConsumer(WebsocketConsumer):
 
             # Jika terdeteksi "cheating" dan belum pernah tersimpan, simpan ke database
             if cheat_status == "cheating" and getattr(self, 'previous_status', None) != "cheating" and self.student_name and self.class_name:
-                # Simpan gambar ke database hanya jika ada transisi ke "cheating"
+                # Simpan gambar ke database hanya jika  transisi ke "cheating"
                 image_name = f"{uuid.uuid4()}.jpg"
                 image_data = ContentFile(buffer.tobytes(), image_name)
 

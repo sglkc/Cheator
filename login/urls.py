@@ -21,6 +21,7 @@ from accounts.views import custom_404
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('accounts.urls')),
+    path('rtc/', include('webrtc.urls'))
 ]
 
 handler404 = custom_404

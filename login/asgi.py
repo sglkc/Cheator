@@ -13,8 +13,9 @@ from channels.routing import ProtocolTypeRouter, URLRouter
 from channels.auth import AuthMiddlewareStack
 from django.urls import path
 from accounts.consumers import VideoConsumer  # Ganti 'yourapp' dengan nama aplikasi Django kamu
+import webrtc.urls
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'login.settings') 
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'login.settings')
 
 # Aplikasi ASGI
 application = ProtocolTypeRouter({
@@ -22,6 +23,7 @@ application = ProtocolTypeRouter({
     "websocket": AuthMiddlewareStack(  # Tambahkan dukungan untuk WebSockets
         URLRouter([
             path('ws/video_feed/', VideoConsumer.as_asgi()),  # Tambahkan routing WebSocket untuk video feed
+            *webrtc.urls.urlpatterns
         ])
     ),
 })

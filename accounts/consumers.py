@@ -15,6 +15,7 @@ class VideoConsumer(WebsocketConsumer):
         self.student_name = None
         self.class_name = None
         self.stat = None
+        self.status = ''
 
     def receive(self, text_data=None, bytes_data=None):
         CheatingEvent = apps.get_model('accounts', 'CheatingEvent')
@@ -61,8 +62,12 @@ class VideoConsumer(WebsocketConsumer):
                 'status': cheat_status
             }
 
-            # Jika terdeteksi "cheating", simpan ke database
-            if cheat_status == "cheating" and self.student_name and self.class_name:
+            # Kirim hasil deteksi ke client
+            self.send(text_data=json.dumps(response))
+
+            # Jika terdeteksi "cheating" dan belum pernah tersimpan, simpan ke database
+            if cheat_status == "cheating" and getattr(self, 'previous_status', None) != "cheating" and self.student_name and self.class_name:
+                # Simpan gambar ke database hanya jika ada transisi ke "cheating"
                 image_name = f"{uuid.uuid4()}.jpg"
                 image_data = ContentFile(buffer.tobytes(), image_name)
 
@@ -72,10 +77,12 @@ class VideoConsumer(WebsocketConsumer):
                     cheating_image=image_data
                 )
 
-            # Kirim hasil deteksi ke client
-            self.send(text_data=json.dumps(response))
+            # Simpan status sebelumnya untuk perbandingan frame berikutnya
+            self.previous_status = cheat_status
+
         else:
             self.send(text_data=json.dumps({'error': 'Failed to decode image.'}))
+
 
     def offline(self, bytes_data, CheatingEvent):
         # Menerima data dari WebSocket dan mengubahnya ke format numpy array

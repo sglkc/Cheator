@@ -3,6 +3,8 @@ from channels.generic.websocket import WebsocketConsumer, async_to_sync, json
 import cv2, base64
 import numpy as np
 
+connected_classes = {}
+
 class WebRtcConsumer(WebsocketConsumer):
     supervisor: str       # sebagai nama grup (1 pengawas banyak kelas)
     class_name: str       # sebagai nama channel
@@ -10,6 +12,9 @@ class WebRtcConsumer(WebsocketConsumer):
     # hapus kelas dari grup pengawas jika disconnect
     def disconnect(self, _):
         if not self.class_name: return
+
+        if self.supervisor in connected_classes:
+            connected_classes[self.supervisor].remove(self.class_name)
 
         async_to_sync(self.channel_layer.group_send)(
             self.supervisor,
@@ -39,8 +44,14 @@ class WebRtcConsumer(WebsocketConsumer):
 
             # jika kelas baru masuk, set kelas, cari pengawas kelas, dan kirim event
             if event_type == 'class_join':
-                self.supervisor = 'Seya' # contoh nama peungawas
+                self.supervisor = 'Seya' # TODO: contoh nama peungawas ganti dari db
                 self.class_name = text_json['class_name']
+
+                # tambah kelas ke koneksi pengawas
+                if not self.supervisor in connected_classes:
+                    connected_classes[self.supervisor] = []
+
+                connected_classes[self.supervisor].append(self.class_name)
 
                 # kirim event classroom join ke teacher
                 async_to_sync(self.channel_layer.group_send)(
@@ -59,6 +70,13 @@ class WebRtcConsumer(WebsocketConsumer):
                     self.supervisor,
                     self.channel_name
                 )
+
+                if self.supervisor in connected_classes:
+                    for class_name in connected_classes[self.supervisor]:
+                        self.send(json.dumps({
+                            'type': 'class_join',
+                            'class_name': class_name,
+                        }))
 
                 self.send(json.dumps({
                     'type': 'message',
@@ -100,7 +118,7 @@ class WebRtcConsumer(WebsocketConsumer):
         img = cv2.imdecode(np_arr, cv2.IMREAD_COLOR)
 
         if img is None:
-            self.send(text_data=json.dumps({
+            self.send(json.dumps({
                 'image': '',
                 'status': False
             }))

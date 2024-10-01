@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RTC Teacher</title>
+    {% load static %}
+</head>
+<body>
+    <div id="container">
+      <template id="template">
+        <div>
+          <img />
+          <p>orang gaming</p>
+        </div>
+      </template>
+    </div>
+
+    <script defer>
+    const container = document.getElementById('container');
+    const template = document.getElementById('template');
+    const socket = new WebSocket('ws://' + window.location.host + '/ws/class_room/');
+    const classImages = new Map()
+    let supervisor = 'Seya' //prompt('kelas apa?')
+
+    socket.onopen = () => socket.send(JSON.stringify({
+      type: 'supervisor_join',
+      supervisor
+    }))
+
+    socket.onmessage = (event) => {
+      const { type, ...data } = JSON.parse(event.data);
+
+      switch (type) {
+        case 'message': {
+          console.log(data.message)
+          break
+        }
+        case 'class_join': {
+          const { class_name } = data
+          const element = template.content.cloneNode(true)
+          const img = element.querySelector('img')
+          const p = element.querySelector('p')
+
+          p.textContent = class_name
+
+          classImages.set(class_name, img)
+          container.appendChild(element)
+          console.info(class_name, 'memasuki meeting')
+          break
+        }
+        case 'class_leave': {
+          const { class_name } = data
+          const img = classImages.get(class_name)
+          img.remove()
+          classImages.delete(class_name)
+          console.warn(class_name, 'kabur dari meeting')
+          break
+        }
+        case 'class_image': {
+          const { class_name, image, status } = data
+          const img = classImages.get(class_name)
+
+          img.src = image ?? '#'
+          console.log(status)
+        }
+      }
+    };
+    </script>
+  </body>
+</html>
+

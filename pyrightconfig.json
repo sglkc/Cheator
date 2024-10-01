@@ -1,4 +1,5 @@
 {
   "reportOptionalMemberAccess": false,
-  "reportIncompatibleMethodOverride": false
+  "reportIncompatibleMethodOverride": false,
+  "reportAttributeAccessIssue": false
 }

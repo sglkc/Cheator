@@ -1,7 +1,7 @@
 from django.urls import path
-from . import consumers, views
+from . import views
 
 urlpatterns = [
-    path('ws/', consumers.WebRtcConsumer.as_asgi()),
-    path('', views.index, name='rtc_index')
+    path('class/', views.classroom, name='rtc_classroom'),
+    path('supervisor/', views.supervisor, name='rtc_supervisor'),
 ]

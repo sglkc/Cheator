@@ -1,5 +1,8 @@
 from django.shortcuts import render
 
 # Create your views here.
-def index(request):
-    return render(request, 'rtc_index.html')
+def classroom(request):
+    return render(request, 'rtc_classroom.html')
+
+def supervisor(request):
+    return render(request, 'rtc_supervisor.html')

@@ -1,92 +1,121 @@
+from logging import error
 from channels.generic.websocket import WebsocketConsumer, async_to_sync, json
+import cv2, base64
+import numpy as np
 
 class WebRtcConsumer(WebsocketConsumer):
-    my_name: str
+    supervisor: str       # sebagai nama grup (1 pengawas banyak kelas)
+    class_name: str       # sebagai nama channel
 
-    def connect(self):
-        self.accept()
-        self.send(text_data=json.dumps({
-            'type': 'connection',
-            'data': {
-                'message': 'connected'
+    # hapus kelas dari grup pengawas jika disconnect
+    def disconnect(self, _):
+        if not self.class_name: return
+
+        async_to_sync(self.channel_layer.group_send)(
+            self.supervisor,
+            {
+                'type': 'class_leave',
+                'class_name': self.class_name,
             }
-        }))
-
-    def disconnect(self):
-        async_to_sync(self.channel_layer.send)(
-            self.my_name, self.channel_name
         )
 
-    def receive(self, text_data: str):
-        text_json = json.loads(text_data)
-        event_type = text_json['type']
+        async_to_sync(self.channel_layer.group_discard)(
+            self.supervisor,
+            self.class_name
+        )
 
-        if event_type == 'login':
-            self.my_name = text_json['data']['name']
+    def receive(self, text_data=None, bytes_data=None):
 
-            async_to_sync(self.channel_layer.group_add)(
-                self.my_name,
-                self.channel_name
-            )
+        # text data buat events
+        if text_data:
 
-        elif event_type == 'call':
-            name = text_json['data']['name']
-            print(self.my_name, "is calling", name);
+            # parsing json
+            try:
+                text_json = json.loads(text_data)
+                event_type = text_json['type']
+            except:
+                error('data ws bukan json')
+                return
 
-            async_to_sync(self.channel_layer.group_send)(
-                name,
-                {
-                    'type': 'call_received',
-                    'data': {
-                        'caller': self.my_name,
-                        'rtcMessage': text_json['data']['rtcMessage']
+            # jika kelas baru masuk, set kelas, cari pengawas kelas, dan kirim event
+            if event_type == 'class_join':
+                self.supervisor = 'Seya' # contoh nama peungawas
+                self.class_name = text_json['class_name']
+
+                # kirim event classroom join ke teacher
+                async_to_sync(self.channel_layer.group_send)(
+                    self.supervisor,
+                    {
+                        'type': 'class_join',
+                        'class_name': self.class_name,
                     }
+                )
+
+            # jika pengawas baru masuk, masukkan ke grupnya, dan kirim sukses
+            elif event_type == 'supervisor_join':
+                self.supervisor = text_json['supervisor']
+
+                async_to_sync(self.channel_layer.group_add)(
+                    self.supervisor,
+                    self.channel_name
+                )
+
+                self.send(json.dumps({
+                    'type': 'message',
+                    'message': 'success'
+                }))
+
+        # bytes data buat foto, selalu foto, kirim ke pengawas dan kirim lagi
+        else:
+            async_to_sync(self.channel_layer.group_send)(
+                self.supervisor,
+                {
+                    'type': 'class_image',
+                    'class_name': self.class_name,
+                    'image': bytes_data
                 }
             )
 
-        elif event_type == 'answer_call':
-            caller = text_json['data']['caller']
+            self.send(json.dumps({
+                'type': 'class_image',
+                'data': 'success'
+            }))
 
-            async_to_sync(self.channel_layer.group_send)(
-                caller,
-                {
-                    'type': 'call_answered',
-                    'data': {
-                        'rtcMessage': text_json['data']['rtcMessage']
-                    }
-                }
-            )
-
-        elif event_type == 'ICEcandidate':
-
-            user = text_json['data']['user']
-
-            async_to_sync(self.channel_layer.group_send)(
-                user,
-                {
-                    'type': 'ICEcandidate',
-                    'data': {
-                        'rtcMessage': text_json['data']['rtcMessage']
-                    }
-                }
-            )
-
-    def call_received(self, event):
-        print('Call received by ', self.my_name )
-        self.send(text_data=json.dumps({
-            'type': 'call_received',
-            'data': event['data']
+    # lapor ke pengawas jika ada kelas yang masuk
+    def class_join(self, event: dict[str, str]):
+        self.send(json.dumps({
+            'type': 'class_join',
+            'class_name': event['class_name']
         }))
 
-    def call_answered(self, event):
-        print(self.my_name, "'s call answered")
-        self.send(text_data=json.dumps({
-            'type': 'call_answered',
-            'data': event['data']
+    # lapor ke pengawas jika ada kelas yang masuk
+    def class_leave(self, event: dict[str, str]):
+        self.send(json.dumps({
+            'type': 'class_leave',
+            'class_name': event['class_name']
         }))
 
-    def ICEcandidate(self, event):
-        self.send(text_data=json.dumps({
-            'type': 'ICEcandidate',
-            'data': event['data']
+    def class_image(self, event: dict):
+        np_arr = np.frombuffer(event['image'], np.uint8)
+        img = cv2.imdecode(np_arr, cv2.IMREAD_COLOR)
+
+        if img is None:
+            self.send(text_data=json.dumps({
+                'image': '',
+                'status': False
+            }))
+
+            return
+
+        processed_frame = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+
+        # Encode frame hasil pemrosesan ke format base64
+        _, buffer = cv2.imencode('.jpg', processed_frame)
+        encoded_image = base64.b64encode(buffer.data).decode('utf-8')
+
+        self.send(json.dumps({
+            'type': 'class_image',
+            'class_name': event['class_name'],
+            'image': 'data:image/jpeg;base64,' + encoded_image,
+            'status': True
         }))

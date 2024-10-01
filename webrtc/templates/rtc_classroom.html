@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RTC Classroom</title>
+    {% load static %}
+</head>
+<body>
+    <canvas id="videoCanvas"></canvas>
+    <img id="processedImage" alt="Processed video feed">
+    <button id="toggleButton">Toggle camera</button>
+
+    <script defer>
+    const videoCanvas = document.getElementById('videoCanvas');
+    const processedImage = document.getElementById('processedImage');
+    const toggleButton = document.getElementById('toggleButton');
+    const toggleIcon = document.getElementById('toggleIcon');
+    const canvasContext = videoCanvas.getContext('2d');
+    const socket = new WebSocket('ws://' + window.location.host + '/ws/class_room/');
+    const json = JSON.stringify
+    let stream = null;
+    let cameraActive = false;
+    let proses = false;
+    let kelas = prompt('kelas apa?').replace(' ', '') ?? 'XI MIPA A'
+
+    socket.onopen = () => socket.send(json({
+      type: 'class_join',
+      class_name: kelas,
+    }))
+
+    socket.onmessage = (event) => {
+      proses = false;
+    };
+
+    function startCamera() {
+      navigator.mediaDevices.getUserMedia({ video: { width: 640, height: 480 } })
+        .then((mediaStream) => {
+          stream = mediaStream;
+          videoCanvas.width = 640;
+          videoCanvas.height = 480;
+
+          const videoTrack = stream.getVideoTracks()[0];
+          const video = document.createElement('video');
+          video.srcObject = stream;
+          video.play();
+
+          video.addEventListener('loadedmetadata', () => {
+            function drawFrame() {
+              if (!cameraActive || proses) return;
+
+              canvasContext.drawImage(video, 0, 0, videoCanvas.width, videoCanvas.height);
+
+              videoCanvas.toBlob((blob) => {
+                const reader = new FileReader();
+                reader.onloadend = () => {
+                  socket.send(reader.result);
+                  proses = true;
+                };
+                reader.readAsArrayBuffer(blob);
+              }, 'image/jpeg', 0.3);
+            }
+
+            setInterval(drawFrame, 50);
+
+            cameraActive = true;
+            toggleButton.classList.add('active');
+          });
+        })
+        .catch((err) => {
+          console.error("Error accessing camera: ", err);
+        });
+    }
+
+    function stopCamera() {
+      if (!stream) return
+
+      let tracks = stream.getTracks();
+      tracks.forEach(track => track.stop());
+      stream = null;
+      cameraActive = false;
+    }
+
+    toggleButton.addEventListener('click', () => {
+      if (cameraActive) {
+        stopCamera();
+      } else {
+        startCamera();
+      }
+    });
+    </script>
+  </body>
+</html>
+

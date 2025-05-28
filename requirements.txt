@@ -1,0 +1,9 @@
+Django
+opencv-python
+numpy
+Pillow
+mediapipe
+channels
+torch
+ultralytics
+pydantic

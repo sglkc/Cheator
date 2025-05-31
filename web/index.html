@@ -5,8 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cheator</title>
-    {% load static %}
-    <link rel="stylesheet" href="{% static 'css/landingg.css' %}" />
+    <link rel="stylesheet" href="assets/css/landingg.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
@@ -58,7 +57,7 @@
             </div>
         </div>
         <div class="image">
-            <img src="{% static 'asset/img/desc.svg' %}" alt="index image" />
+            <img src="assets/images/desc.svg" alt="index image" />
         </div>
     </section>
 
@@ -69,10 +68,10 @@
             <h2 class="modal-title">Want to try?</h2>
             <p class="modal-description">Choose what you want to try!</p>
             <div class="modal-body">
-                <img src="{% static 'asset/img/modal.svg' %}" alt="modalimg" class="modal-img" />
+                <img src="assets/images/modal.svg" alt="modalimg" class="modal-img" />
                 <div class="modal-buttons">
-                    <a href="{% url 'login' %}" class="btn" id="onlineBtn">Online</a>
-                    <a href="{% url 'video_feed' %}" class="btn" id="offlineBtn">Offline</a>
+                    <a href="login.html" class="btn" id="onlineBtn">Online</a>
+                    <a href="web.html" class="btn" id="offlineBtn">Offline</a>
                 </div>
             </div>
         </div>
@@ -83,7 +82,7 @@
         <h1 class="heading" data-aos="fade-up" data-aos-duration="1000"> <span> Over</span>view </h1>
         <div class="row">
             <div class="video-container" data-aos="fade-right" data-aos-duration="1000">
-                <video src="{% static 'asset/video/demo.mp4' %}" loop autoplay muted></video>
+                <video src="assets/videos/demo.mp4" loop autoplay muted></video>
             </div>
             <div class="content" data-aos="fade-left" data-aos-duration="1000">
                 <h3>Virtual Proctoring</h3>
@@ -91,7 +90,7 @@
                     kecerdasan buatan untuk memantau dan menganalisis gerakan peserta ujian, mendeteksi perilaku
                     mencurigakan dengan akurasi tinggi.</p>
                 <div class="text-img">
-                    <img src="{% static 'asset/img/online.svg' %}" data-aos="zoom-in-up" data-aos-duration="1000"
+                    <img src="assets/images/online.svg" data-aos="zoom-in-up" data-aos-duration="1000"
                         alt="Online">
                     <p>Dengan fitur ini, pengawasan dapat dilakukan secara efektif selama ujian berlangsung, mengurangi
                         kemungkinan kecurangan yang tidak terdeteksi.</p>
@@ -105,19 +104,19 @@
                     objek yang cepat dan akurat, yang mampu mengidentifikasi dan melacak aktivitas peserta ujian dengan
                     detail yang tinggi.</p>
                 <div class="text-img">
-                    <img src="{% static 'asset/img/offlin.svg' %}" alt="Offline" data-aos="zoom-in-right"
+                    <img src="assets/images/offlin.svg" alt="Offline" data-aos="zoom-in-right"
                         data-aos-duration="1000">
                     <p>YOLO dengan deteksi objek real-time memastikan indikasi kecurangan terdeteksi tepat dan segera,
                         memberikan pengawas alat efektif untuk memantau ujian dan menjaga integritasnya.</p>
                 </div>
             </div>
             <div class="video-container" data-aos="fade-left" data-aos-duration="1000">
-                <video src="{% static 'asset/video/final.mp4' %}" loop autoplay muted></video>
+                <video src="assets/videos/final.mp4" loop autoplay muted></video>
             </div>
         </div>
         <div class="row">
             <div class="video-container" data-aos="fade-right" data-aos-duration="1000">
-                <img src="{% static 'asset/img/workflow.jpeg' %}" loop autoplay muted></img>
+                <img src="assets/images/workflow.jpeg" loop autoplay muted></img>
             </div>
             <div class="content" data-aos="fade-left" data-aos-duration="1000">
                 <h3>How It Work?</h3>
@@ -136,7 +135,7 @@
 
     <section class="icons-container">
         <div class="icons" data-aos="zoom-in" data-aos-duration="1000">
-            <img src="{% static 'asset/img/dl.png' %}" alt="">
+            <img src="assets/images/dl.png" alt="">
             <div class="info">
                 <h3>YOLO</h3>
                 <span>Motion Detection</span>
@@ -144,7 +143,7 @@
         </div>
 
         <div class="icons" data-aos="zoom-in" data-aos-duration="1000">
-            <img src="{% static 'asset/img/mediap.png' %}" alt="">
+            <img src="assets/images/mediap.png" alt="">
             <div class="info">
                 <h3>Mediapipe</h3>
                 <span>Pose Estimation & Tracking</span>
@@ -152,7 +151,7 @@
         </div>
 
         <div class="icons" data-aos="zoom-in" data-aos-duration="1000">
-            <img src="{% static 'asset/img/open.png' %}" alt="">
+            <img src="assets/images/open.png" alt="">
             <div class="info">
                 <h3>Open-CV</h3>
                 <span>Computer Vision Library</span>
@@ -160,7 +159,7 @@
         </div>
 
         <div class="icons" data-aos="zoom-in" data-aos-duration="1000">
-            <img src="{% static 'asset/img/python.png' %}" alt="">
+            <img src="assets/images/python.png" alt="">
             <div class="info">
                 <h3>Python</h3>
                 <span>Versatile Programming Language</span>
@@ -176,7 +175,7 @@
             <div class="column" data-aos="fade-up-right" data-aos-duration="3000">
                 <div class="card">
                     <div class="img-container">
-                        <img src="{% static 'asset/img/juper.jpeg' %}" alt="" />
+                        <img src="assets/images/juper.jpeg" alt="" />
                     </div>
                     <h3>Muhammad Zufar</h3>
                     <p>AI Engineer</p>
@@ -200,7 +199,7 @@
             <div class="column" data-aos="fade-up" data-aos-duration="3000">
                 <div class="card">
                     <div class="img-container">
-                        <img src="{% static 'asset/img/afin.jpeg' %}" alt="" />
+                        <img src="assets/images/afin.jpeg" alt="" />
                     </div>
                     <h3>Afin Maulana</h3>
                     <p>All Role</p>
@@ -224,7 +223,7 @@
             <div class="column" data-aos="fade-up" data-aos-duration="3000">
                 <div class="card">
                     <div class="img-container">
-                        <img src="{% static 'asset/img/cikal.jpeg' %}" alt="" />
+                        <img src="assets/images/cikal.jpeg" alt="" />
                     </div>
                     <h3>Cikal Gemintang</h3>
                     <p>Full Stack</p>
@@ -248,7 +247,7 @@
             <div class="column" data-aos="fade-up-left" data-aos-duration="3000">
                 <div class="card">
                     <div class="img-container">
-                        <img src="{% static 'asset/img/epen.jpeg' %}" alt="" />
+                        <img src="assets/images/epen.jpeg" alt="" />
                     </div>
                     <h3>Rievan Averillio</h3>
                     <p>AI Engineer</p>

@@ -4,8 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Dashboard</title>
-    {% load static %}
-    <link rel="stylesheet" href="{% static 'css/dashboard.css' %}" />
+    <link rel="stylesheet" href="assets/css/dashboard.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
@@ -186,72 +185,36 @@
         <a href='web' class="logo">Dashboard <span>.</span></a>
         <nav class="navbar">
             <a href="#opemodal" id="openProfileLink">Profile</a>
-            <a href="{% url 'logout' %}">Logout</a>
+            <a href="index.html">Logout</a>
         </nav>
     </header>
     <section class="home">
-        <div class="content">
-        <h3>{% if user.gender == 'P' %}
-            Halo Pak {{ user.pnaggilan}}!
-            {% elif user.gender == 'W' %}
-            Halo Bu {{ user.pnaggilan}}!
-            {% else %}
-                Selamat datang {{ user.nama }}
-            {% endif %}</h3>
-        {% for class in classes %}
-        <p>Status: {% if class.status %} Open {% else %} Closed {% endif %}</p>
+        <div class="content">        <h3>Halo Teacher!</h3>
+        <p>Status: Class Open</p>
         
-        {% if not class.status %}
-            <form method="POST" action="{% url 'open_class' class.id %}">
-                {% csrf_token %}
-                <a style="--clr: #000" class="btn-3" href="{% url 'open_class' class.id %}">
-                    <span class="button__icon-wrapper">
-                        <svg width="10" class="button__icon-svg" xmlns="http://www.w3.org/2000/svg" fill="none"
-                            viewBox="0 0 14 15">
-                            <path fill="currentColor"
-                                d="M13.376 11.552l-.264-10.44-10.44-.24.024 2.28 6.96-.048L.2 12.56l1.488 1.488 9.432-9.432-.048 6.912 2.304.024z">
-                            </path>
-                        </svg>
-    
-                        <svg class="button__icon-svg button__icon-svg--copy" xmlns="http://www.w3.org/2000/svg"
-                            width="10" fill="none" viewBox="0 0 14 15">
-                            <path fill="currentColor"
-                                d="M13.376 11.552l-.264-10.44-10.44-.24.024 2.28 6.96-.048L.2 12.56l1.488 1.488 9.432-9.432-.048 6.912 2.304.024z">
-                            </path>
-                        </svg>
-                    </span>
-                    Open Class
-                </a>
-            </form>
-        {% else %}
-        <p style="padding-bottom: 0px;">Kelas: {{ class.name }}</p>
-        <p>Meeting URL: {{ class.meeting_url }}</p>
-            <form method="POST" action="{% url 'close_class' %}">
-                {% csrf_token %}
-                <a style="--clr: #000" class="btn-3" href="{% url 'close_class' %}">
-                    <span class="button__icon-wrapper">
-                        <svg width="10" class="button__icon-svg" xmlns="http://www.w3.org/2000/svg" fill="none"
-                            viewBox="0 0 14 15">
-                            <path fill="currentColor"
-                                d="M13.376 11.552l-.264-10.44-10.44-.24.024 2.28 6.96-.048L.2 12.56l1.488 1.488 9.432-9.432-.048 6.912 2.304.024z">
-                            </path>
-                        </svg>
-    
-                        <svg class="button__icon-svg button__icon-svg--copy" xmlns="http://www.w3.org/2000/svg"
-                            width="10" fill="none" viewBox="0 0 14 15">
-                            <path fill="currentColor"
-                                d="M13.376 11.552l-.264-10.44-10.44-.24.024 2.28 6.96-.048L.2 12.56l1.488 1.488 9.432-9.432-.048 6.912 2.304.024z">
-                            </path>
-                        </svg>
-                    </span>
-                    Close Class
-                </a>
-            </form>
-        {% endif %}
-    {% endfor %}
+        <p style="padding-bottom: 0px;">Kelas: Sample Class</p>
+        <p>Meeting URL: https://meet.example.com</p>
+            <a style="--clr: #000" class="btn-3" href="#">
+                <span class="button__icon-wrapper">
+                    <svg width="10" class="button__icon-svg" xmlns="http://www.w3.org/2000/svg" fill="none"
+                        viewBox="0 0 14 15">
+                        <path fill="currentColor"
+                            d="M13.376 11.552l-.264-10.44-10.44-.24.024 2.28 6.96-.048L.2 12.56l1.488 1.488 9.432-9.432-.048 6.912 2.304.024z">
+                        </path>
+                    </svg>
+
+                    <svg class="button__icon-svg button__icon-svg--copy" xmlns="http://www.w3.org/2000/svg"
+                        width="10" fill="none" viewBox="0 0 14 15">
+                        <path fill="currentColor"
+                            d="M13.376 11.552l-.264-10.44-10.44-.24.024 2.28 6.96-.048L.2 12.56l1.488 1.488 9.432-9.432-.048 6.912 2.304.024z">
+                        </path>
+                    </svg>
+                </span>
+                Close Class
+            </a>
         </div>
         <div class="image">
-            <img src="{% static 'asset/img/dash.svg' %}" alt="Home image" />
+            <img src="assets/images/dash.svg" alt="Home image" />
         </div>
     </section>
 

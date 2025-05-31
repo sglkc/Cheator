@@ -4,8 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Offline</title>
-    {% load static %}
-    <link rel="stylesheet" href="{% static 'css/web.css' %}">
+    <link rel="stylesheet" href="assets/css/web.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
     <script src="https://cdn.socket.io/4.0.0/socket.io.min.js"></script>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
@@ -109,7 +108,7 @@
             <button class="control-button" id="toggleButton">
                 <span class="material-icons" id="toggleIcon">videocam_off</span>
             </button>
-            <button class="control-button active" id="folderButton" onclick="openModal('Offline', '{{cheating_list.0.jumlah_foto}}', '{{ cheating_list.0.cheating_image_urls|join:"," }}', '{{ cheating_list.0.cheating_timestamps|join:"," }}')">
+            <button class="control-button active" id="folderButton" onclick="openModal('Offline', '0', '', '')">
                 <span class="material-icons">folder</span>
             </button>
         </div>

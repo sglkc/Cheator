@@ -8,8 +8,7 @@
       src="https://kit.fontawesome.com/64d58efce2.js"
       crossorigin="anonymous"
     ></script>
-    {% load static %}
-    <link rel="stylesheet" href="{% static 'css/loginn.css' %}" />
+    <link rel="stylesheet" href="assets/css/loginn.css" />
     <title>Log In</title>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   </head>
@@ -18,8 +17,7 @@
       <div class="forms-container">
         <div class="signin-signup">
           <!-- Sign In Form -->
-          <form method="POST" class="sign-in-form" id="student-form">
-            {% csrf_token %}
+          <form class="sign-in-form" id="student-form">
             <h2 class="title">Mahasiswa</h2>
             <div class="input-field">
               <i class="fas fa-user"></i>
@@ -35,8 +33,7 @@
             </div>
           </form>
           <!-- Sign Up Form -->
-          <form method="POST" class="sign-up-form" id="teacher-form">
-            {% csrf_token %}
+          <form class="sign-up-form" id="teacher-form">
             <h2 class="title">Pengajar</h2>
             <div class="input-field">
               <i class="fas fa-user"></i>
@@ -60,45 +57,22 @@
           <div class="content">
             <a href='/' class="logo">Cheator <span>.</span></a>
           </div>
-          <img src="{% static 'asset/img/login.svg' %}" class="image" alt="Log Image" />
+          <img src="assets/images/login.svg" class="image" alt="Log Image" />
         </div>
         <!-- Sign Up Panel -->
         <div class="panel right-panel">
           <div class="content">
             <a href='/' class="logo">Cheator <span>.</span></a>
           </div>
-          <img src="{% static 'asset/img/pengawass.svg' %}" class="image" alt="Register Image" />
+          <img src="assets/images/pengawass.svg" class="image" alt="Register Image" />
         </div>
       </div>
     </div>
-    <script src="{% static 'js/app.js' %}"></script>
+    <script src="assets/js/app.js"></script>
     <!-- SweetAlert for messages -->
     <script>
       document.addEventListener('DOMContentLoaded', function () {
-          {% if messages %}
-              {% for message in messages %}
-                  let type = '{{ message.tags }}';
-                  let title = 'Informasi';
-                  let icon = 'info';
-
-                  if (type === 'error') {
-                      icon = 'error';
-                      title = 'Oops!';
-                  } else if (type === 'success') {
-                      icon = 'success';
-                      title = "Berhasil"
-                  }
-
-                  Swal.fire({
-                      icon: icon,
-                      title: title,
-                      text: '{{ message }}',
-                      timer: 5000,
-                      showConfirmButton: true,
-                      confirmButtonText: 'OK'
-                  });
-              {% endfor %}
-          {% endif %}
+          // Client-side message handling can be added here if needed
       });
   </script>
   </body>

@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Offline</title>
+    <link rel="stylesheet" href="assets/css/offline.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+    <script src="https://cdn.socket.io/4.0.0/socket.io.min.js"></script>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!-- TensorFlow.js -->
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@3.20.0/dist/tf.min.js"></script>
+    <!-- MediaPipe Pose and Face Detection -->
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/pose@0.5.1675469404/pose.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh@0.4.1633559619/face_mesh.js"></script>
+    <script src="assets/js/offline.js" defer></script>
+</head>
+
+<body>
+    <div class="container">
+        <canvas id="videoCanvas"></canvas>
+        <img class="imgcanvas" id="processedImage" alt="Processed video feed">
+        <div>
+            <a href="/" class="logo">Monitor <span>.</span></a>
+        </div>
+        <div class="controls">
+            <button class="control-button" id="toggleButton">
+                <span class="material-icons" id="toggleIcon">videocam_off</span>
+            </button>
+            <button class="control-button active" id="folderButton" onclick="openModal('Offline', '0', '', '')">
+                <span class="material-icons">folder</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Modal Structure -->
+    <div id="studentModal" class="studentmodel">
+        <div class="studentmodel-content">
+            <span class="studentmodel-close" onclick="closeModal()">&times;</span>
+            <h2 id="modalName" class="studentmodel-title"></h2>
+            <p id="modalClass" class="studentmodel-class"></p>
+            <div class="studentmodel-body">
+                <table class="studentmodel-table">
+                    <thead>
+                        <tr>
+
+                        </tr>
+                    </thead>
+                    <tbody id="modalImageTableBody">
+                        <!-- Dynamic rows will be appended here by JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

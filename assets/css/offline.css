@@ -38,7 +38,7 @@ canvas {
     height: 100%;
     object-fit: cover;
     display: none;
-} 
+}
 
 .controls {
     position: absolute;
@@ -174,5 +174,101 @@ canvas {
     color: #333;         /* Warna teks */
     line-height: 1.6;    /* Jarak antar baris */
     font-weight: bold;
-    
+
+}
+
+.studentmodel {
+  display: none;
+  position: fixed;
+  z-index: 1000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7);
+}
+
+.studentmodel-content {
+  background-color: #fefefe;
+  margin: auto;
+  /* Ubah margin menjadi auto untuk memusatkan modal */
+  padding: 20px;
+  border-radius: 8px;
+  width: 60%;
+  max-width: 700px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  max-height: 80%;
+  /* Limit the modal height to allow scrolling */
+  position: relative;
+  /* Tambahkan posisi relatif untuk penyesuaian */
+  top: 50%;
+  /* Geser ke tengah vertikal */
+  transform: translateY(-50%);
+  /* Geser modal ke atas setengah dari tinggi modal untuk memusatkan */
+}
+
+.studentmodel-close {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.studentmodel-close:hover,
+.studentmodel-close:focus {
+  color: #000;
+}
+
+.studentmodel-header {
+  font-size: 2rem;
+  /* Ukuran header 2rem */
+  font-weight: bold;
+  margin-bottom: 10px;
+  text-align: center;
+  /* Pusatkan teks dalam header */
+}
+
+.studentmodel-class {
+  font-size: 18px;
+  color: #555;
+}
+
+.studentmodel-body {
+  margin-top: 20px;
+  overflow-y: auto;
+  /* Ensure scrolling inside the modal body */
+  max-height: 60vh;
+  /* Set a maximum height for scroll area */
+}
+
+.studentmodel-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+  margin-bottom: 50px;
+  margin-left: -20px;
+}
+
+.studentmodel-table th,
+.studentmodel-table td {
+  padding: 12px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+.studentmodel-table th {
+  background-color: #f2f2f2;
+  font-weight: bold;
+}
+
+.studentmodel-table-image {
+  max-width: 320px;
+  height: auto;
+  border-radius: 4px;
+  transition: transform 0.2s;
+}
+
+.studentmodel-table-image:hover {
+  transform: scale(1.2);
 }

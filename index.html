@@ -6,11 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cheator</title>
     <link rel="stylesheet" href="assets/css/landing.css" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
+    <link rel="stylesheet" href="assets/css/all.min.css">
+    <link rel="stylesheet" href="assets/css/aos.css">
+    <script src="assets/js/aos.js"></script>
 
 </head>
 
@@ -301,7 +299,12 @@
         });
     </script>
     <script>
-        AOS.init();
+        AOS.init({
+            duration: 1000,
+            once: true,
+            overflow: false,
+            offset: 50
+        });
     </script>
 </body>
 

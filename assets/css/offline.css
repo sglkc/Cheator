@@ -19,11 +19,12 @@ body {
 .container {
     text-align: center;
     position: relative;
-    width: 1000px;
-    height: 565px;
+    /* width: 80vw; */
+    height: 80vh;
     border-radius: 5px;
     overflow: hidden;
     background-color: black;
+    aspect-ratio: 16/9;
 }
 
 canvas {
@@ -271,4 +272,372 @@ canvas {
 
 .studentmodel-table-image:hover {
   transform: scale(1.2);
+}
+
+/* ================================
+   RESPONSIVE DESIGN - MOBILE STYLES
+   ================================ */
+
+/* Tablet styles */
+@media (max-width: 768px) {
+    body {
+        padding: 1rem;
+    }
+
+    .container {
+        width: 95%;
+        max-width: 600px;
+        /* height: auto; */
+        min-height: 400px;
+    }
+
+    .logo {
+        top: 10px;
+        left: 10px;
+        font-size: 1.2rem;
+        padding: 0.5rem 2%;
+    }
+
+    .controls {
+        bottom: 15px;
+        gap: 15px;
+    }
+
+    .control-button {
+        width: 45px;
+        height: 45px;
+    }
+
+    .control-button .material-icons {
+        font-size: 20px;
+    }
+
+    .modal-content {
+        width: 90%;
+        max-width: 350px;
+        padding: 15px;
+    }
+
+    .modal-content img {
+        width: 280px;
+    }
+
+    .modal-content h2 {
+        font-size: 18px;
+    }
+
+    .modal-content p {
+        font-size: 13px;
+    }
+
+    .modal-content button {
+        padding: 8px 16px;
+        font-size: 14px;
+    }
+
+    .studentmodel-content {
+        width: 90%;
+        max-width: 600px;
+        padding: 15px;
+        margin: 5% auto;
+        max-height: 90vh;
+    }
+
+    .studentmodel-header {
+        font-size: 1.5rem;
+    }
+
+    .studentmodel-class {
+        font-size: 16px;
+    }
+
+    .studentmodel-body {
+        max-height: 70vh;
+    }
+
+    .studentmodel-table {
+        margin-left: 0;
+    }
+
+    .studentmodel-table th,
+    .studentmodel-table td {
+        padding: 8px;
+        font-size: 14px;
+    }
+
+    .studentmodel-table-image {
+        max-width: 250px;
+    }
+
+    .studentmodel-close {
+        font-size: 24px;
+    }
+}
+
+/* Mobile styles */
+@media (max-width: 480px) {
+    body {
+        padding: 0.5rem;
+    }
+
+    .container {
+        width: 100%;
+        /* height: auto; */
+        min-height: 300px;
+        border-radius: 3px;
+    }
+
+    .logo {
+        top: 5px;
+        left: 5px;
+        font-size: 1rem;
+        padding: 0.3rem 1%;
+    }
+
+    .controls {
+        bottom: 10px;
+        gap: 10px;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .control-button {
+        width: 40px;
+        height: 40px;
+        min-width: 40px;
+        min-height: 40px;
+    }
+
+    .control-button .material-icons {
+        font-size: 18px;
+    }
+
+    .modal-content {
+        width: 95%;
+        max-width: 300px;
+        padding: 12px;
+    }
+
+    .modal-content img {
+        width: 220px;
+    }
+
+    .modal-content h2 {
+        font-size: 16px;
+        margin-bottom: 15px;
+    }
+
+    .modal-content p {
+        font-size: 12px;
+        line-height: 1.4;
+    }
+
+    .modal-content small {
+        font-size: 11px;
+        margin-top: 10px;
+        margin-bottom: 15px;
+    }
+
+    .modal-content button {
+        padding: 8px 14px;
+        font-size: 13px;
+        border-radius: 15px;
+    }
+
+    .studentmodel-content {
+        width: 95%;
+        max-width: 100%;
+        padding: 10px;
+        margin: 2% auto;
+        max-height: 95vh;
+    }
+
+    .studentmodel-header {
+        font-size: 1.3rem;
+        margin-bottom: 8px;
+    }
+
+    .studentmodel-class {
+        font-size: 14px;
+    }
+
+    .studentmodel-body {
+        margin-top: 15px;
+        max-height: 75vh;
+    }
+
+    .studentmodel-table {
+        margin-left: 0;
+        margin-bottom: 30px;
+    }
+
+    .studentmodel-table th,
+    .studentmodel-table td {
+        padding: 6px;
+        font-size: 12px;
+    }
+
+    .studentmodel-table-image {
+        max-width: 180px;
+    }
+
+    .studentmodel-close {
+        font-size: 22px;
+        padding: 5px;
+    }
+
+    /* Make table scrollable horizontally on very small screens */
+    .studentmodel-body {
+        overflow-x: auto;
+    }
+
+    .studentmodel-table {
+        min-width: 400px;
+    }
+}
+
+/* Extra small mobile devices */
+@media (max-width: 320px) {
+    .container {
+        min-height: 250px;
+    }
+
+    .logo {
+        font-size: 0.9rem;
+    }
+
+    .control-button {
+        width: 35px;
+        height: 35px;
+        min-width: 35px;
+        min-height: 35px;
+    }
+
+    .control-button .material-icons {
+        font-size: 16px;
+    }
+
+    .modal-content {
+        width: 98%;
+        padding: 10px;
+    }
+
+    .modal-content img {
+        width: 180px;
+    }
+
+    .modal-content h2 {
+        font-size: 14px;
+    }
+
+    .modal-content p {
+        font-size: 11px;
+    }
+
+    .modal-content button {
+        padding: 6px 12px;
+        font-size: 12px;
+    }
+
+    .studentmodel-content {
+        width: 98%;
+        padding: 8px;
+    }
+
+    .studentmodel-header {
+        font-size: 1.1rem;
+    }
+
+    .studentmodel-class {
+        font-size: 12px;
+    }
+
+    .studentmodel-table th,
+    .studentmodel-table td {
+        padding: 4px;
+        font-size: 11px;
+    }
+
+    .studentmodel-table-image {
+        max-width: 150px;
+    }
+}
+
+/* Landscape mobile orientation */
+@media (max-width: 768px) and (orientation: landscape) {
+    /* .container {
+        height: 80vh;
+        min-height: 300px;
+    } */
+
+    .controls {
+        bottom: 8px;
+    }
+
+    .modal-content {
+        margin: 5% auto;
+        max-height: 80vh;
+        overflow-y: auto;
+    }
+
+    .studentmodel-content {
+        margin: 2% auto;
+        max-height: 85vh;
+    }
+}
+
+/* Touch improvements for mobile */
+@media (max-width: 768px) {
+    .control-button,
+    .modal-content button,
+    .studentmodel-close {
+        -webkit-tap-highlight-color: rgba(0, 0, 0, 0.1);
+        touch-action: manipulation;
+    }
+
+    /* Improve modal positioning on mobile */
+    .modal {
+        align-items: center;
+        justify-content: center;
+        padding: 1rem;
+    }
+
+    .studentmodel {
+        padding: 1rem;
+    }
+
+    /* Better scrolling for tables */
+    .studentmodel-body::-webkit-scrollbar {
+        width: 6px;
+        height: 6px;
+    }
+
+    .studentmodel-body::-webkit-scrollbar-track {
+        background: #f1f1f1;
+        border-radius: 3px;
+    }
+
+    .studentmodel-body::-webkit-scrollbar-thumb {
+        background: #888;
+        border-radius: 3px;
+    }
+
+    .studentmodel-body::-webkit-scrollbar-thumb:hover {
+        background: #555;
+    }
+}
+
+/* Fix for iOS Safari viewport units */
+@supports (-webkit-touch-callout: none) {
+    @media (max-width: 768px) {
+        .container {
+            height: -webkit-fill-available;
+            min-height: -webkit-fill-available;
+        }
+
+        .studentmodel-content {
+            max-height: 90vh;
+            max-height: -webkit-fill-available;
+        }
+    }
 }

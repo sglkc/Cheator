@@ -155,7 +155,7 @@ header .navbar a:hover {
     /* Lebar dari bentuk lonjong */
     height: 600px;
     /* Tinggi dari bentuk lonjong */
-    background-color: #333;
+    background-color: #999;
     /* Warna dari bentuk abstrak */
     border-bottom-left-radius: 100%;
     /* Membuat bentuk setengah lonjong */
@@ -636,4 +636,424 @@ input[type="password"] {
 .btn-3:hover .button__icon-svg--copy {
     transition: transform 0.3s ease-in-out 0.1s;
     transform: translate(0);
+}
+
+/* ================================
+   RESPONSIVE DESIGN - MOBILE STYLES
+   ================================ */
+
+/* Tablet styles */
+@media (max-width: 768px) {
+    html {
+        font-size: 55%;
+    }
+    
+    section {
+        padding: 2rem 5%;
+    }
+    
+    header {
+        padding: 1.5rem 5%;
+        flex-direction: column;
+        gap: 1rem;
+    }
+    
+    header .logo {
+        font-size: 2.5rem;
+    }
+    
+    header .navbar {
+        display: flex;
+        gap: 1rem;
+    }
+    
+    header .navbar a {
+        font-size: 1.6rem;
+        padding: 0 1rem;
+    }
+    
+    .home {
+        flex-direction: column;
+        padding: 0 2rem;
+        text-align: center;
+        min-height: auto;
+        padding-top: 16rem;
+    }
+    
+    .abstract-shape {
+        width: 400px;
+        height: 400px;
+    }
+    
+    .home .content {
+        padding-left: 0;
+        margin-bottom: 3rem;
+    }
+    
+    .home .content h3 {
+        font-size: 4rem;
+    }
+    
+    .home .content span {
+        font-size: 2.8rem;
+    }
+    
+    .home .image {
+        padding-right: 0;
+        justify-content: center;
+    }
+    
+    .about {
+        padding-left: 2rem;
+        padding-right: 2rem;
+    }
+    
+    .about .row {
+        flex-direction: column;
+        gap: 3rem;
+    }
+    
+    .about .row .content h3 {
+        font-size: 2.5rem;
+        text-align: center;
+    }
+    
+    .offl {
+        text-align: center;
+    }
+    
+    .text-img {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+    
+    .text-img img {
+        width: 200px;
+    }
+    
+    .video-container {
+        width: 100%;
+    }
+    
+    .icons-container {
+        flex-direction: column;
+        gap: 2rem;
+    }
+    
+    .icons-container .icons {
+        flex-direction: column;
+        text-align: center;
+        padding: 2.5rem;
+    }
+    
+    .icons-container .icons img {
+        margin-right: 0;
+        margin-bottom: 1rem;
+    }
+    
+    .contact .row {
+        flex-direction: column;
+    }
+    
+    .contact .row .column {
+        flex: 1 1 100%;
+        max-width: 100%;
+        margin-bottom: 2rem;
+    }
+    
+    .modal-content {
+        width: 80%;
+        margin: 20% auto;
+    }
+    
+    .modal-body {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .modal-img {
+        max-width: 200px;
+    }
+    
+    .modal-buttons {
+        width: 100%;
+    }
+    
+    .heading {
+        font-size: 3rem;
+    }
+}
+
+/* Mobile styles */
+@media (max-width: 480px) {
+    html {
+        font-size: 50%;
+    }
+    
+    section {
+        padding: 2rem 3%;
+    }
+    
+    header {
+        padding: 1rem 3%;
+    }
+    
+    header .logo {
+        font-size: 2rem;
+    }
+    
+    header .navbar a {
+        font-size: 1.4rem;
+        padding: 0 0.5rem;
+    }
+    
+    .home {
+        padding: 0 1rem;
+        padding-top: 16rem;
+    }
+    
+    .abstract-shape {
+        width: 250px;
+        height: 250px;
+    }
+    
+    .home .content h3 {
+        font-size: 3rem;
+    }
+    
+    .home .content span {
+        font-size: 2.2rem;
+    }
+    
+    .home .content p {
+        font-size: 1.4rem;
+    }
+    
+    .about {
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+    
+    .about .row .content h3 {
+        font-size: 2rem;
+    }
+    
+    .about .row .content p {
+        font-size: 1.3rem;
+        padding: 2rem 0;
+    }
+    
+    .text-img img {
+        width: 150px;
+    }
+    
+    .btn {
+        padding: 0.8rem 2.5rem;
+        font-size: 1.5rem;
+    }
+    
+    .btn-3 {
+        padding: 10px 20px 10px 14px;
+        font-size: 12px;
+    }
+    
+    .icons-container .icons {
+        padding: 2rem 1rem;
+    }
+    
+    .icons-container .icons h3 {
+        font-size: 1.3rem;
+    }
+    
+    .contact .row .column .card {
+        padding: 2.5em 0.5em;
+    }
+    
+    .contact .row .column .card .img-container {
+        width: 10em;
+        height: 10em;
+        padding-top: 4rem;
+    }
+    
+    .contact .row .column .card img {
+        width: 10em;
+        height: 10em;
+        margin: -4rem;
+    }
+    
+    .contact .row .column .card h3 {
+        font-size: 1.5rem;
+        padding-top: 4rem;
+    }
+    
+    .modal-content {
+        width: 95%;
+        margin: 15% auto;
+        padding: 15px;
+    }
+    
+    .modal-title {
+        font-size: 2.2rem;
+    }
+    
+    .modal-description {
+        font-size: 1.6rem;
+    }
+    
+    .modal-img {
+        max-width: 150px;
+    }
+    
+    .heading {
+        font-size: 2.5rem;
+        padding: 0.5rem;
+    }
+    
+    .newmodal-content {
+        width: 95%;
+        padding: 20px;
+    }
+}
+
+/* Extra small mobile devices */
+@media (max-width: 320px) {
+    html {
+        font-size: 45%;
+    }
+    
+    header .navbar {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+    
+    header .navbar a {
+        font-size: 1.2rem;
+        padding: 0.5rem;
+    }
+    
+    .home .content h3 {
+        font-size: 2.5rem;
+    }
+    
+    .home .content span {
+        font-size: 1.8rem;
+    }
+    
+    .abstract-shape {
+        width: 200px;
+        height: 200px;
+    }
+    
+    .about .row .content h3 {
+        font-size: 1.8rem;
+    }
+    
+    .heading {
+        font-size: 2rem;
+    }
+    
+    .modal-title {
+        font-size: 1.8rem;
+    }
+    
+    .modal-description {
+        font-size: 1.4rem;
+    }
+}
+
+/* Landscape mobile orientation */
+@media (max-width: 768px) and (orientation: landscape) {
+    .home {
+        flex-direction: row;
+        min-height: 70vh;
+        padding-top: 8rem;
+    }
+    
+    .home .content {
+        margin-bottom: 0;
+    }
+    
+    .abstract-shape {
+        width: 300px;
+        height: 300px;
+    }
+}
+
+/* Fix for hamburger menu if needed */
+@media (max-width: 768px) {
+    .navbar {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+}
+
+/* Improve touch targets for mobile */
+@media (max-width: 768px) {
+    .btn, .close-btn, header .navbar a {
+        min-height: 44px;
+        min-width: 44px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    .close-btn {
+        padding: 0.5rem;
+    }
+}
+
+/* ================================
+   AOS OVERFLOW FIX
+   ================================ */
+
+/* Prevent AOS animations from causing horizontal overflow */
+[data-aos] {
+    overflow-x: hidden;
+}
+
+/* Specific fixes for AOS fade animations */
+[data-aos="fade-right"],
+[data-aos="fade-left"],
+[data-aos="fade-up-right"],
+[data-aos="fade-up-left"],
+[data-aos="fade-down-right"],
+[data-aos="fade-down-left"],
+[data-aos="zoom-in-right"],
+[data-aos="zoom-in-left"] {
+    overflow: hidden;
+}
+
+/* Container constraints for AOS elements */
+.about .row,
+.contact .row,
+.icons-container {
+    overflow-x: hidden;
+}
+
+/* Ensure all sections don't exceed viewport width */
+section {
+    overflow-x: hidden;
+    max-width: 100vw;
+    box-sizing: border-box;
+}
+
+/* Specific fix for elements that might cause overflow */
+.about .row .content,
+.about .row .video-container,
+.contact .row .column,
+.icons-container .icons {
+    max-width: 100%;
+    box-sizing: border-box;
+}
+
+/* Prevent text-img elements from overflowing */
+.text-img {
+    max-width: 100%;
+    overflow: hidden;
+}
+
+.text-img img {
+    max-width: 100%;
+    height: auto;
 }

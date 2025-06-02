@@ -25,7 +25,7 @@ async function initializeMediaPipe() {
     // Initialize Face Mesh
     faceMesh = new FaceMesh({
       locateFile: (file) => {
-        return `https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh@0.4.1633559619/${file}`;
+        return `assets/mediapipe/${file}`;
       }
     });
 
@@ -52,7 +52,7 @@ async function initializeMediaPipe() {
     // Initialize Pose
     pose = new Pose({
       locateFile: (file) => {
-        return `https://cdn.jsdelivr.net/npm/@mediapipe/pose@0.5.1675469404/${file}`;
+        return `assets/mediapipe/${file}`;
       }
     });
 

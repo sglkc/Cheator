@@ -25,12 +25,27 @@
             <a href="/" class="logo">Monitor <span>.</span></a>
         </div>
         <div class="controls">
-            <button class="control-button" id="toggleButton">
+            <button class="control-button" id="downloadButton">
+                <span class="material-icons">download</span>
+            </button>
+            <button class="control-button" id="toggleButton" disabled>
                 <span class="material-icons" id="toggleIcon">videocam_off</span>
             </button>
             <button class="control-button active" id="folderButton" onclick="openModal('Offline', '0', '', '')">
                 <span class="material-icons">folder</span>
             </button>
+        </div>
+    </div>
+
+    <!-- Loading Modal -->
+    <div id="loadingModal" class="loading-modal" style="display: none;">
+        <div class="loading-modal-content">
+            <div class="loading-spinner"></div>
+            <h3>Loading Face Detection Model</h3>
+            <p>Downloading and initializing MediaPipe models...</p>
+            <div class="loading-progress">
+                <div class="loading-bar"></div>
+            </div>
         </div>
     </div>
 

@@ -2,6 +2,7 @@ const videoCanvas = document.getElementById('videoCanvas');
 const processedImage = document.getElementById('processedImage');
 const toggleButton = document.getElementById('toggleButton');
 const toggleIcon = document.getElementById('toggleIcon');
+const downloadButton = document.getElementById('downloadButton');
 
 const canvasContext = videoCanvas.getContext('2d');
 let stream = null;
@@ -18,9 +19,29 @@ let cheatingStatus = "no cheating";
 let faceMesh = null;
 let pose = null;
 let detectionResults = null;
+let modelsLoaded = false;
 
-// Initialize MediaPipe
-async function initializeMediaPipe() {
+// Loading modal functions
+function showLoadingModal() {
+  const modal = document.getElementById('loadingModal');
+  modal.style.display = 'flex';
+}
+
+function hideLoadingModal() {
+  const modal = document.getElementById('loadingModal');
+  modal.style.display = 'none';
+}
+
+// Initialize MediaPipe models and force download
+async function downloadAndInitializeModels() {
+  if (modelsLoaded) {
+    return; // Models already loaded
+  }
+
+  showLoadingModal();
+  downloadButton.disabled = true;
+  downloadButton.style.opacity = '0.5';
+  
   try {
     // Initialize Face Mesh
     faceMesh = new FaceMesh({
@@ -78,9 +99,27 @@ async function initializeMediaPipe() {
       }
     });
 
-    console.log("MediaPipe initialized successfully");
+    // Force model download by calling initialize()
+    console.log("Downloading Face Mesh model...");
+    await faceMesh.initialize();
+    console.log("Downloading Pose model...");
+    await pose.initialize();
+
+    console.log("MediaPipe models downloaded and initialized successfully");
+    modelsLoaded = true;
+    
+    // Enable camera button and hide download button
+    toggleButton.disabled = false;
+    toggleButton.style.opacity = '1';
+    downloadButton.style.display = 'none';
+    
+    hideLoadingModal();
   } catch (error) {
-    console.error("Error initializing MediaPipe:", error);
+    console.error("Error downloading MediaPipe models:", error);
+    downloadButton.disabled = false;
+    downloadButton.style.opacity = '1';
+    hideLoadingModal();
+    alert("Failed to download face detection models. Please check your internet connection and try again.");
   }
 }
 
@@ -394,6 +433,11 @@ async function processFrame() {
 }
 
 function startCamera() {
+  if (!modelsLoaded) {
+    alert("Please download the face detection models first by clicking the download button.");
+    return;
+  }
+
   navigator.mediaDevices.getUserMedia({ video: { width: 640, height: 480 } })
     .then(async (mediaStream) => {
       stream = mediaStream;
@@ -403,9 +447,6 @@ function startCamera() {
       video = document.createElement('video');
       video.srcObject = stream;
       video.play();
-
-      // Initialize MediaPipe when camera starts
-      await initializeMediaPipe();
 
       video.addEventListener('loadedmetadata', () => {
         cameraActive = true;
@@ -418,6 +459,7 @@ function startCamera() {
     })
     .catch((err) => {
       console.error("Error accessing camera: ", err);
+      alert("Error accessing camera. Please check permissions and try again.");
     });
 }
 
@@ -434,6 +476,12 @@ function stopCamera() {
   }
 }
 
+// Download button event listener
+downloadButton.addEventListener('click', () => {
+  downloadAndInitializeModels();
+});
+
+// Toggle camera button event listener
 toggleButton.addEventListener('click', () => {
   if (cameraActive) {
     stopCamera();

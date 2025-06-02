@@ -454,7 +454,6 @@ canvas {
 
     .studentmodel-header {
         font-size: 1.3rem;
-        margin-bottom: 8px;
     }
 
     .studentmodel-class {
@@ -468,7 +467,6 @@ canvas {
 
     .studentmodel-table {
         margin-left: 0;
-        margin-bottom: 30px;
     }
 
     .studentmodel-table th,
@@ -640,4 +638,88 @@ canvas {
             max-height: -webkit-fill-available;
         }
     }
+}
+
+/* Loading Modal Styles */
+.loading-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 10000;
+}
+
+.loading-modal-content {
+    background-color: #fff;
+    padding: 30px;
+    border-radius: 10px;
+    text-align: center;
+    max-width: 400px;
+    width: 90%;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+.loading-modal-content h3 {
+    margin: 20px 0 10px 0;
+    color: #333;
+    font-size: 1.5em;
+}
+
+.loading-modal-content p {
+    margin: 10px 0 20px 0;
+    color: #666;
+}
+
+.loading-spinner {
+    width: 50px;
+    height: 50px;
+    border: 5px solid #f3f3f3;
+    border-top: 5px solid #3498db;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin: 0 auto;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.loading-progress {
+    width: 100%;
+    height: 6px;
+    background-color: #f3f3f3;
+    border-radius: 3px;
+    overflow: hidden;
+    margin-top: 20px;
+}
+
+.loading-bar {
+    height: 100%;
+    background-color: #3498db;
+    border-radius: 3px;
+    animation: loading-progress 2s ease-in-out infinite;
+}
+
+@keyframes loading-progress {
+    0% { width: 0%; }
+    50% { width: 70%; }
+    100% { width: 100%; }
+}
+
+/* Disabled button styling */
+.control-button:disabled {
+    opacity: 0.4 !important;
+    cursor: not-allowed !important;
+    background-color: #666 !important;
+}
+
+.control-button:disabled:hover {
+    background-color: #666 !important;
+    transform: none !important;
 }

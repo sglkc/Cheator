@@ -68,7 +68,7 @@
             <div class="modal-body">
                 <img src="assets/images/modal.svg" alt="modalimg" class="modal-img" />
                 <div class="modal-buttons">
-                    <a href="offline.html" class="btn" id="offlineBtn">Offline</a>
+                    <a href="{{ route('offline') }}" class="btn" id="offlineBtn">Offline</a>
                 </div>
             </div>
         </div>

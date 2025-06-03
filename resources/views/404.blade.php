@@ -18,17 +18,17 @@
             -webkit-box-sizing: border-box;
                     box-sizing: border-box;
           }
-          
+
           body {
             padding: 0;
             margin: 0;
           }
-          
+
           #notfound {
             position: relative;
             height: 100vh;
           }
-          
+
           #notfound .notfound {
             position: absolute;
             left: 50%;
@@ -37,18 +37,18 @@
                 -ms-transform: translate(-50%, -50%);
                     transform: translate(-50%, -50%);
           }
-          
+
           .notfound {
             max-width: 520px;
             width: 100%;
             text-align: center;
             line-height: 1.4;
           }
-          
+
           .notfound .notfound-404 {
             height: 190px;
           }
-          
+
           .notfound .notfound-404 h1 {
             font-family: 'Montserrat', sans-serif;
             font-size: 146px;
@@ -56,19 +56,19 @@
             margin: 0px;
             color: #232323;
           }
-          
+
           .notfound .notfound-404 h1>span {
             display: inline-block;
             width: 120px;
             height: 120px;
-            background-image: url("/static/asset/img/emoji.png");
+            background-image: url("/assets/images/emoji.png");
             background-size: cover;
             -webkit-transform: scale(1.4);
                 -ms-transform: scale(1.4);
                     transform: scale(1.4);
             z-index: -1;
           }
-          
+
           .notfound h2 {
             font-family: 'Montserrat', sans-serif;
             font-size: 22px;
@@ -77,13 +77,13 @@
             text-transform: uppercase;
             color: #232323;
           }
-          
+
           .notfound p {
             font-family: 'Montserrat', sans-serif;
             color: #787878;
             font-weight: 300;
           }
-          
+
           .notfound a {
             font-family: 'Montserrat', sans-serif;
             display: inline-block;
@@ -96,11 +96,11 @@
             -webkit-transition: 0.2s all;
             transition: 0.2s all;
           }
-          
+
           .notfound a:hover {
             background-color: #8c0000;
           }
-          
+
           @media only screen and (max-width: 767px) {
             .notfound .notfound-404 {
               height: 115px;
@@ -113,7 +113,7 @@
               height: 86px;
             }
           }
-          
+
     </style>
 
 	<!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->

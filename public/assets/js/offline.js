@@ -429,10 +429,10 @@ async function processFrame() {
   if (faceMesh && pose) {
     // Create a canvas to get the current frame for MediaPipe
     const canvas = document.createElement('canvas');
-    canvas.width = video.videoWidth;
-    canvas.height = video.videoHeight;
+    canvas.width = videoCanvas.width; // Use the actual canvas dimensions
+    canvas.height = videoCanvas.height; // Use the actual canvas dimensions
     const ctx = canvas.getContext('2d');
-    ctx.drawImage(video, 0, 0);
+    ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
 
     // Send to MediaPipe models
     await faceMesh.send({ image: canvas });
@@ -573,17 +573,35 @@ function startCamera() {
     return;
   }
 
+  // Check if device is mobile
+  const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+  
+  // Configure camera settings based on device type
+  const videoConstraints = {
+    frameRate: { ideal: 30, max: 30 },
+    facingMode: isMobile ? "user" : "user", // "user" = front camera, "environment" = back camera
+    width: isMobile ? { ideal: 480, max: 480 } : { ideal: 640, max: 640 },
+    height: isMobile ? { ideal: 640, max: 640 } : { ideal: 480, max: 480 }
+  };
+
   navigator.mediaDevices.getUserMedia({
-    video: {
-      width: 640,
-      height: 480,
-      frameRate: { ideal: 30, max: 30 }
-    }
+    video: videoConstraints
   })
     .then(async (mediaStream) => {
       stream = mediaStream;
-      videoCanvas.width = 640;
-      videoCanvas.height = 480;
+      
+      // Set canvas size based on device type
+      const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+      
+      if (isMobile) {
+        // Portrait mode for mobile (480x640)
+        videoCanvas.width = 480;
+        videoCanvas.height = 640;
+      } else {
+        // Landscape mode for desktop (640x480)
+        videoCanvas.width = 640;
+        videoCanvas.height = 480;
+      }
 
       video = document.createElement('video');
       video.srcObject = stream;

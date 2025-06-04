@@ -21,6 +21,106 @@ let pose = null;
 let detectionResults = null;
 let modelsLoaded = false;
 
+// API function to upload cheating event
+async function uploadCheatingEvent(studentName, imageFile) {
+  try {
+    // Create FormData to handle file upload
+    const formData = new FormData();
+    formData.append('name', studentName);
+    formData.append('image', imageFile);
+
+    // Get CSRF token if available (for Laravel CSRF protection)
+    const csrfToken = document.querySelector('meta[name="csrf-token"]');
+    const headers = {
+      'Accept': 'application/json'
+    };
+    
+    if (csrfToken) {
+      headers['X-CSRF-TOKEN'] = csrfToken.getAttribute('content');
+    }
+
+    // Make API call
+    const response = await fetch('/api/cheating-events', {
+      method: 'POST',
+      headers: headers,
+      body: formData
+    });
+
+    const result = await response.json();
+
+    if (response.ok && result.success) {
+      console.log('Cheating event uploaded successfully:', result.data);
+      return {
+        success: true,
+        data: result.data,
+        message: result.message
+      };
+    } else {
+      console.error('Upload failed:', result);
+      return {
+        success: false,
+        error: result.message || 'Upload failed',
+        errors: result.errors || {}
+      };
+    }
+  } catch (error) {
+    console.error('Network error uploading cheating event:', error);
+    return {
+      success: false,
+      error: 'Network error: ' + error.message
+    };
+  }
+}
+
+// Helper function to convert canvas to blob for upload
+function canvasToBlob(canvas, quality = 0.8) {
+  return new Promise((resolve) => {
+    canvas.toBlob((blob) => {
+      resolve(blob);
+    }, 'image/jpeg', quality);
+  });
+}
+
+// Function to capture current frame and upload cheating event
+async function captureAndUploadCheatingEvent(studentName) {
+  if (!cameraActive || !videoCanvas) {
+    console.error('Camera is not active or canvas not available');
+    return {
+      success: false,
+      error: 'Camera is not active'
+    };
+  }
+
+  try {
+    // Convert current canvas frame to blob
+    const imageBlob = await canvasToBlob(videoCanvas);
+    
+    // Create a File object from the blob
+    const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+    const fileName = `cheating_evidence_${timestamp}.jpg`;
+    const imageFile = new File([imageBlob], fileName, { type: 'image/jpeg' });
+
+    // Upload the cheating event
+    const result = await uploadCheatingEvent(studentName, imageFile);
+    
+    if (result.success) {
+      console.log('Cheating event captured and uploaded:', result.data);
+      // You can add UI feedback here later
+    } else {
+      console.error('Failed to upload cheating event:', result.error);
+      // You can add error handling UI here later
+    }
+
+    return result;
+  } catch (error) {
+    console.error('Error capturing and uploading cheating event:', error);
+    return {
+      success: false,
+      error: error.message
+    };
+  }
+}
+
 // Loading modal functions
 function showLoadingModal() {
   const modal = document.getElementById('loadingModal');
@@ -36,6 +136,10 @@ function hideLoadingModal() {
 async function downloadAndInitializeModels() {
   if (modelsLoaded) {
     return; // Models already loaded
+  }
+
+  while (!localStorage.getItem("nama")) {
+    localStorage.setItem("nama", prompt("Masukkan nama:"));
   }
 
   showLoadingModal();
@@ -265,6 +369,7 @@ function detectCheating(landmarks) {
       tengokKiriDetected = true;
     }
 
+    captureAndUploadCheatingEvent(localStorage.getItem("nama"))
     const elapsedTime = (currentTime - startTime) / 1000;
 
     if (elapsedTime >= cheatingDuration) {
@@ -549,4 +654,104 @@ function openModal(name, jumlah, imageUrls, timestamps) {
 
 function closeModal() {
   document.getElementById('studentModal').style.display = 'none'; // Hide the modal
+}
+
+// API function to upload cheating event
+async function uploadCheatingEvent(studentName, imageFile) {
+  try {
+    // Create FormData to handle file upload
+    const formData = new FormData();
+    formData.append('name', studentName);
+    formData.append('image', imageFile);
+
+    // Get CSRF token if available (for Laravel CSRF protection)
+    const csrfToken = document.querySelector('meta[name="csrf-token"]');
+    const headers = {
+      'Accept': 'application/json'
+    };
+    
+    if (csrfToken) {
+      headers['X-CSRF-TOKEN'] = csrfToken.getAttribute('content');
+    }
+
+    // Make API call
+    const response = await fetch('/api/cheating-events', {
+      method: 'POST',
+      headers: headers,
+      body: formData
+    });
+
+    const result = await response.json();
+
+    if (response.ok && result.success) {
+      console.log('Cheating event uploaded successfully:', result.data);
+      return {
+        success: true,
+        data: result.data,
+        message: result.message
+      };
+    } else {
+      console.error('Upload failed:', result);
+      return {
+        success: false,
+        error: result.message || 'Upload failed',
+        errors: result.errors || {}
+      };
+    }
+  } catch (error) {
+    console.error('Network error uploading cheating event:', error);
+    return {
+      success: false,
+      error: 'Network error: ' + error.message
+    };
+  }
+}
+
+// Helper function to convert canvas to blob for upload
+function canvasToBlob(canvas, quality = 0.8) {
+  return new Promise((resolve) => {
+    canvas.toBlob((blob) => {
+      resolve(blob);
+    }, 'image/jpeg', quality);
+  });
+}
+
+// Function to capture current frame and upload cheating event
+async function captureAndUploadCheatingEvent(studentName) {
+  if (!cameraActive || !videoCanvas) {
+    console.error('Camera is not active or canvas not available');
+    return {
+      success: false,
+      error: 'Camera is not active'
+    };
+  }
+
+  try {
+    // Convert current canvas frame to blob
+    const imageBlob = await canvasToBlob(videoCanvas);
+    
+    // Create a File object from the blob
+    const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+    const fileName = `cheating_evidence_${timestamp}.jpg`;
+    const imageFile = new File([imageBlob], fileName, { type: 'image/jpeg' });
+
+    // Upload the cheating event
+    const result = await uploadCheatingEvent(studentName, imageFile);
+    
+    if (result.success) {
+      console.log("Cheating event captured and uploaded:", result.data);
+      // You can add UI feedback here later
+    } else {
+      console.error("Failed to upload cheating event:", result.error);
+      // You can add error handling UI here later
+    }
+
+    return result;
+  } catch (error) {
+    console.error("Error capturing and uploading cheating event:", error);
+    return {
+      success: false,
+      error: error.message
+    };
+  }
 }

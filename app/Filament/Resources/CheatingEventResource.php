@@ -22,6 +22,10 @@ class CheatingEventResource extends Resource
 {
     protected static ?string $model = CheatingEvent::class;
 
+    protected static ?string $modelLabel = 'Bukti Kecurangan';
+
+    protected static ?string $slug = 'kecurangan';
+
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
     public static function form(Form $form): Form

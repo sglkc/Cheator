@@ -44,7 +44,7 @@ async function uploadCheatingEvent(studentName, imageFile) {
     const headers = {
       'Accept': 'application/json'
     };
-    
+
     if (csrfToken) {
       headers['X-CSRF-TOKEN'] = csrfToken.getAttribute('content');
     }
@@ -104,7 +104,7 @@ async function captureAndUploadCheatingEvent(studentName) {
   try {
     // Convert current canvas frame to blob
     const imageBlob = await canvasToBlob(videoCanvas);
-    
+
     // Create a File object from the blob
     const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
     const fileName = `cheating_evidence_${timestamp}.jpg`;
@@ -112,7 +112,7 @@ async function captureAndUploadCheatingEvent(studentName) {
 
     // Upload the cheating event
     const result = await uploadCheatingEvent(studentName, imageFile);
-    
+
     if (result.success) {
       console.log('Cheating event captured and uploaded:', result.data);
       // You can add UI feedback here later
@@ -148,14 +148,14 @@ async function downloadAndInitializeModels() {
     return; // Models already loaded
   }
 
-  while (!localStorage.getItem("nama")) {
+  do {
     localStorage.setItem("nama", prompt("Masukkan nama:"));
-  }
+  } while (!localStorage.getItem("nama"))
 
   showLoadingModal();
   downloadButton.disabled = true;
   downloadButton.style.opacity = '0.5';
-  
+
   try {
     // Initialize Face Mesh
     faceMesh = new FaceMesh({
@@ -221,12 +221,12 @@ async function downloadAndInitializeModels() {
 
     console.log("MediaPipe models downloaded and initialized successfully");
     modelsLoaded = true;
-    
+
     // Enable camera button and hide download button
     toggleButton.disabled = false;
     toggleButton.style.opacity = '1';
     downloadButton.style.display = 'none';
-    
+
     hideLoadingModal();
   } catch (error) {
     console.error("Error downloading MediaPipe models:", error);
@@ -411,7 +411,7 @@ async function processFrame() {
   if (!cameraActive || !video) return;
 
   const currentTime = performance.now();
-  
+
   // Frame rate limiting - only process if enough time has passed
   if (currentTime - lastFrameTime < frameInterval) {
     if (cameraActive) {
@@ -419,7 +419,7 @@ async function processFrame() {
     }
     return;
   }
-  
+
   lastFrameTime = currentTime;
 
   canvasContext.clearRect(0, 0, videoCanvas.width, videoCanvas.height);
@@ -573,12 +573,12 @@ function startCamera() {
     return;
   }
 
-  navigator.mediaDevices.getUserMedia({ 
-    video: { 
-      width: 640, 
+  navigator.mediaDevices.getUserMedia({
+    video: {
+      width: 640,
       height: 480,
       frameRate: { ideal: 30, max: 30 }
-    } 
+    }
   })
     .then(async (mediaStream) => {
       stream = mediaStream;
@@ -705,7 +705,7 @@ async function uploadCheatingEvent(studentName, imageFile) {
     const headers = {
       'Accept': 'application/json'
     };
-    
+
     if (csrfToken) {
       headers['X-CSRF-TOKEN'] = csrfToken.getAttribute('content');
     }
@@ -765,7 +765,7 @@ async function captureAndUploadCheatingEvent(studentName) {
   try {
     // Convert current canvas frame to blob
     const imageBlob = await canvasToBlob(videoCanvas);
-    
+
     // Create a File object from the blob
     const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
     const fileName = `cheating_evidence_${timestamp}.jpg`;
@@ -773,7 +773,7 @@ async function captureAndUploadCheatingEvent(studentName) {
 
     // Upload the cheating event
     const result = await uploadCheatingEvent(studentName, imageFile);
-    
+
     if (result.success) {
       console.log("Cheating event captured and uploaded:", result.data);
       // You can add UI feedback here later

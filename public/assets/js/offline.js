@@ -15,6 +15,16 @@ let tengokKiriDetected = false;
 const cheatingDuration = 0.75;
 let cheatingStatus = "no cheating";
 
+// Throttling for upload function
+let lastUploadTime = 0;
+const uploadThrottleDelay = 3000; // 3 seconds between uploads
+let consecutiveCheatingDetections = 0;
+
+// Frame rate control
+const targetFPS = 30;
+const frameInterval = 1000 / targetFPS; // ~33.33ms between frames
+let lastFrameTime = 0;
+
 // MediaPipe Face Mesh and Pose Detection
 let faceMesh = null;
 let pose = null;
@@ -369,7 +379,14 @@ function detectCheating(landmarks) {
       tengokKiriDetected = true;
     }
 
-    captureAndUploadCheatingEvent(localStorage.getItem("nama"))
+    consecutiveCheatingDetections++;
+
+    // Throttled upload - only upload every 3 seconds, but immediately on first detection
+    if (consecutiveCheatingDetections === 1 || currentTime - lastUploadTime >= uploadThrottleDelay) {
+      captureAndUploadCheatingEvent(localStorage.getItem("nama"));
+      lastUploadTime = currentTime;
+    }
+
     const elapsedTime = (currentTime - startTime) / 1000;
 
     if (elapsedTime >= cheatingDuration) {
@@ -383,6 +400,7 @@ function detectCheating(landmarks) {
     // Reset detection
     tengokKiriDetected = false;
     startTime = null;
+    consecutiveCheatingDetections = 0;
     cheatingStatus = "stand by";
     return { status: cheatingStatus, color: "blue", duration: 0 };
   }
@@ -391,6 +409,18 @@ function detectCheating(landmarks) {
 // Process frame with real MediaPipe detection
 async function processFrame() {
   if (!cameraActive || !video) return;
+
+  const currentTime = performance.now();
+  
+  // Frame rate limiting - only process if enough time has passed
+  if (currentTime - lastFrameTime < frameInterval) {
+    if (cameraActive) {
+      requestAnimationFrame(processFrame);
+    }
+    return;
+  }
+  
+  lastFrameTime = currentTime;
 
   canvasContext.clearRect(0, 0, videoCanvas.width, videoCanvas.height);
   canvasContext.drawImage(video, 0, 0, videoCanvas.width, videoCanvas.height);
@@ -543,7 +573,13 @@ function startCamera() {
     return;
   }
 
-  navigator.mediaDevices.getUserMedia({ video: { width: 640, height: 480 } })
+  navigator.mediaDevices.getUserMedia({ 
+    video: { 
+      width: 640, 
+      height: 480,
+      frameRate: { ideal: 30, max: 30 }
+    } 
+  })
     .then(async (mediaStream) => {
       stream = mediaStream;
       videoCanvas.width = 640;
